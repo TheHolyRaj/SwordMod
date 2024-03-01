@@ -1,0 +1,14 @@
+{
+  "switch": {
+    "subtitle": "sounds.rajswordmod.switch",
+    "sounds": [
+      "rajswordmod:switch"
+    ]
+  },
+  "projectile_slash": {
+    "subtitle": "sounds.rajswordmod.projectile_slash",
+    "sounds": [
+      "rajswordmod:projectile_slash1"
+    ]
+  }
+}
