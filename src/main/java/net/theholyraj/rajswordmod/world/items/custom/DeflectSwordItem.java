@@ -1,5 +1,12 @@
 package net.theholyraj.rajswordmod.world.items.custom;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.particle.AttackSweepParticle;
+import net.minecraft.client.particle.Particle;
+import net.minecraft.client.particle.TextureSheetParticle;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
@@ -16,6 +23,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.theholyraj.rajswordmod.client.sound.ModSounds;
+import net.theholyraj.rajswordmod.network.ModMessages;
+import net.theholyraj.rajswordmod.network.packet.DeflectParticleS2CPacket;
 
 import java.util.Comparator;
 import java.util.List;
@@ -49,7 +58,7 @@ public class DeflectSwordItem extends SwordItem {
             if (pRemainingUseDuration < 71960){
                 deleteNearbyProjectiles(player);
             }
-            if (pRemainingUseDuration == 71960){
+            if (pRemainingUseDuration == 71960 && pLevel.isClientSide()){
                 pLevel.playSound((Player)pLivingEntity,pLivingEntity.blockPosition(), ModSounds.SWITCH.get(), SoundSource.PLAYERS,1f,1f);
             }
         }
@@ -68,10 +77,11 @@ public class DeflectSwordItem extends SwordItem {
 
         for (Projectile projectile: projectiles){
             if (projectile.distanceToSqr(player) < 7){
+                player.level().playSound(null, projectile.blockPosition(), ModSounds.PROJECTILE_SLASH.get(), SoundSource.PLAYERS,0.1f,1f);
                 if (!player.level().isClientSide()){
+                    ModMessages.sendToClients(new DeflectParticleS2CPacket(projectile.getX(),projectile.getY(),projectile.getZ()));
                     projectile.remove(Entity.RemovalReason.DISCARDED);
                 }
-                player.level().playSound(null, projectile.blockPosition(), ModSounds.PROJECTILE_SLASH.get(), SoundSource.PLAYERS,0.2f,1f);
             }
         }
     }

@@ -13,6 +13,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.theholyraj.rajswordmod.client.sound.ModSounds;
+import net.theholyraj.rajswordmod.network.ModMessages;
 import net.theholyraj.rajswordmod.world.items.ModItems;
 import org.slf4j.Logger;
 
@@ -33,6 +34,9 @@ public class SwordMod {
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
+        event.enqueueWork(() -> {
+            ModMessages.register();
+        });
     }
 
     private void addCreative(BuildCreativeModeTabContentsEvent event) {
