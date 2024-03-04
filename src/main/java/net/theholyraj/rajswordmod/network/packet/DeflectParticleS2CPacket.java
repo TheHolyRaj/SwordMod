@@ -3,7 +3,10 @@ package net.theholyraj.rajswordmod.network.packet;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.sounds.SoundSource;
 import net.minecraftforge.network.NetworkEvent;
+import net.theholyraj.rajswordmod.client.particle.ModParticles;
+import net.theholyraj.rajswordmod.client.sound.ModSounds;
 
 import java.util.function.Supplier;
 
@@ -34,7 +37,8 @@ public class DeflectParticleS2CPacket {
         NetworkEvent.Context context = supplier.get();
         context.enqueueWork(() -> {
             // HERE WE ARE ON THE CLIENT!
-            Minecraft.getInstance().level.addParticle(ParticleTypes.SWEEP_ATTACK,true,x,y,z,0,0,0);
+            Minecraft.getInstance().level.addParticle(ModParticles.DEFLECT_PARTICLES.get(),true,x,y,z,0,0,0);
+            Minecraft.getInstance().level.playSound(null, x,y,z, ModSounds.PROJECTILE_SLASH.get(), SoundSource.PLAYERS,0.1f,1f);
         });
         return true;
     }
