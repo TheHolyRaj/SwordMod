@@ -18,7 +18,7 @@ public class DeflectParticle extends TextureSheetParticle {
         this.rCol = f;
         this.gCol = f;
         this.bCol = f;
-        this.quadSize = 0.3F ;//- (float)pQuadSizeMultiplier * 0.5F;
+        this.quadSize = 0.5F ;//- (float)pQuadSizeMultiplier * 0.5F;
         this.setSpriteFromAge(pSprites);
     }
 

@@ -43,14 +43,21 @@ public class DeflectSwordItem extends SwordItem {
 
     @Override
     public void releaseUsing(ItemStack pStack, Level pLevel, LivingEntity pLivingEntity, int pTimeCharged) {
-        if (!pLevel.isClientSide() && pLivingEntity instanceof Player player) {
-            player.sendSystemMessage(Component.literal("released"));
+        if (!pLevel.isClientSide()) {
             if (pStack.hasTag()){
                 pStack.getTag().putBoolean("using", false);
             }
             else {
                 pStack.setTag(new CompoundTag());
                 pStack.getTag().putBoolean("using", false);
+            }
+        }else if (pLivingEntity instanceof Player player){
+            if (pStack.hasTag() && pStack.getTag().getBoolean("using")){
+                Vec3 playerLook = player.getViewVector(1);
+                Vec3 dashVec = new Vec3(playerLook.x(), playerLook.y(), playerLook.z());
+                Vec3 addedMovement = new Vec3(playerLook.x(), 0, playerLook.z());
+                player.setDeltaMovement(dashVec);
+                player.addDeltaMovement(addedMovement);
             }
         }
 
