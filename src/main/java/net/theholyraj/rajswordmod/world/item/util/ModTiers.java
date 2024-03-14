@@ -1,4 +1,4 @@
-package net.theholyraj.rajswordmod.world.items.util;
+package net.theholyraj.rajswordmod.world.item.util;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Tier;
@@ -8,7 +8,7 @@ import net.minecraftforge.common.ForgeTier;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.TierSortingRegistry;
 import net.theholyraj.rajswordmod.SwordMod;
-import net.theholyraj.rajswordmod.world.items.ModItems;
+import net.theholyraj.rajswordmod.world.item.ModItems;
 
 import java.util.List;
 

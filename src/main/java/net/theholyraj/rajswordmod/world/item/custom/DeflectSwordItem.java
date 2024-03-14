@@ -1,8 +1,6 @@
-package net.theholyraj.rajswordmod.world.items.custom;
+package net.theholyraj.rajswordmod.world.item.custom;
 
-import net.minecraft.client.particle.AttackSweepParticle;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -22,7 +20,8 @@ import net.theholyraj.rajswordmod.SwordMod;
 import net.theholyraj.rajswordmod.client.sound.ModSounds;
 import net.theholyraj.rajswordmod.network.ModMessages;
 import net.theholyraj.rajswordmod.network.packet.DeflectParticleS2CPacket;
-import net.theholyraj.rajswordmod.world.items.ModItems;
+import net.theholyraj.rajswordmod.world.entity.custom.DashProjectileEntity;
+import net.theholyraj.rajswordmod.world.item.ModItems;
 
 import java.util.Comparator;
 import java.util.List;
@@ -43,8 +42,14 @@ public class DeflectSwordItem extends SwordItem {
 
     @Override
     public void releaseUsing(ItemStack pStack, Level pLevel, LivingEntity pLivingEntity, int pTimeCharged) {
-        if (!pLevel.isClientSide()) {
+        if (!pLevel.isClientSide() && pLivingEntity instanceof Player player) {
             if (pStack.hasTag()){
+                if (pStack.hasTag() && pStack.getTag().getBoolean("using")){
+                    player.getCooldowns().addCooldown(this, 50);
+                    DashProjectileEntity projectile = new DashProjectileEntity(pLevel, player);
+                    projectile.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 1.5F, 0);
+                    pLevel.addFreshEntity(projectile);
+                }
                 pStack.getTag().putBoolean("using", false);
             }
             else {
@@ -55,9 +60,7 @@ public class DeflectSwordItem extends SwordItem {
             if (pStack.hasTag() && pStack.getTag().getBoolean("using")){
                 Vec3 playerLook = player.getViewVector(1);
                 Vec3 dashVec = new Vec3(playerLook.x(), playerLook.y(), playerLook.z());
-                Vec3 addedMovement = new Vec3(playerLook.x(), 0, playerLook.z());
                 player.setDeltaMovement(dashVec);
-                player.addDeltaMovement(addedMovement);
             }
         }
 

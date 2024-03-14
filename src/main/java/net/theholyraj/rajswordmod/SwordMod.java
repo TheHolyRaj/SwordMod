@@ -2,6 +2,8 @@ package net.theholyraj.rajswordmod;
 
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
@@ -14,11 +16,13 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.theholyraj.rajswordmod.client.entity.DashProjectileRenderer;
 import net.theholyraj.rajswordmod.client.particle.ModParticles;
 import net.theholyraj.rajswordmod.client.particle.custom.DeflectParticle;
 import net.theholyraj.rajswordmod.client.sound.ModSounds;
 import net.theholyraj.rajswordmod.network.ModMessages;
-import net.theholyraj.rajswordmod.world.items.ModItems;
+import net.theholyraj.rajswordmod.world.entity.ModEntities;
+import net.theholyraj.rajswordmod.world.item.ModItems;
 import org.slf4j.Logger;
 
 @Mod(SwordMod.MODID)
@@ -29,6 +33,7 @@ public class SwordMod {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         ModItems.register(modEventBus);
+        ModEntities.register(modEventBus);
 
         ModSounds.register(modEventBus);
         ModParticles.register(modEventBus);
@@ -59,6 +64,7 @@ public class SwordMod {
     public static class ClientModEvents{
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
+            EntityRenderers.register(ModEntities.DASH_PROJECTILE.get(), DashProjectileRenderer::new);
         }
         @SubscribeEvent
         public static void registerParticleFactories(final RegisterParticleProvidersEvent event) {

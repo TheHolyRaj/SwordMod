@@ -1,14 +1,13 @@
-package net.theholyraj.rajswordmod.world.items;
+package net.theholyraj.rajswordmod.world.item;
 
 import net.minecraft.world.item.*;
-import net.minecraftforge.common.TierSortingRegistry;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import net.theholyraj.rajswordmod.SwordMod;
-import net.theholyraj.rajswordmod.world.items.custom.DeflectSwordItem;
-import net.theholyraj.rajswordmod.world.items.util.ModTiers;
+import net.theholyraj.rajswordmod.world.item.custom.DeflectSwordItem;
+import net.theholyraj.rajswordmod.world.item.util.ModTiers;
 
 public class ModItems {
     public static final DeferredRegister<Item> ITEMS =
