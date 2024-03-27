@@ -17,6 +17,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.theholyraj.rajswordmod.client.entity.DashProjectileRenderer;
+import net.theholyraj.rajswordmod.client.item.ModItemProperties;
 import net.theholyraj.rajswordmod.client.particle.ModParticles;
 import net.theholyraj.rajswordmod.client.particle.custom.DeflectParticle;
 import net.theholyraj.rajswordmod.client.sound.ModSounds;
@@ -65,6 +66,7 @@ public class SwordMod {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
             EntityRenderers.register(ModEntities.DASH_PROJECTILE.get(), DashProjectileRenderer::new);
+            ModItemProperties.makeProperties();
         }
         @SubscribeEvent
         public static void registerParticleFactories(final RegisterParticleProvidersEvent event) {

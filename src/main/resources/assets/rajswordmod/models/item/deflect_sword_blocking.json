@@ -1,0 +1,19 @@
+{
+  "parent": "rajswordmod:item/deflect_sword",
+  "gui_light": "front",
+  "textures": {
+    "layer0": "rajswordmod:item/deflect_sword"
+  },
+  "display": {
+    "firstperson_righthand": {
+      "rotation": [ -15, 0, 90 ],
+      "translation": [ -4, 4, -0 ],
+      "scale": [ 0.75, 0.75, 0.75 ]
+    },
+    "firstperson_lefthand": {
+      "rotation": [ -15, 0, 0 ],
+      "translation": [ -4, 4, -0 ],
+      "scale": [ 0.75, 0.75, 0.75 ]
+    }
+  }
+}

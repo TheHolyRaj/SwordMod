@@ -1,11 +1,19 @@
 package net.theholyraj.rajswordmod.world.item.custom;
 
+import com.google.common.collect.Multimap;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.*;
@@ -13,6 +21,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.client.event.RenderHandEvent;
+import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -47,8 +57,11 @@ public class DeflectSwordItem extends SwordItem {
                 if (pStack.hasTag() && pStack.getTag().getBoolean("using")){
                     player.getCooldowns().addCooldown(this, 50);
                     DashProjectileEntity projectile = new DashProjectileEntity(pLevel, player);
+                    projectile.setSword(pStack);
+                    projectile.setPlayer(player);
                     projectile.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 1.5F, 0);
                     pLevel.addFreshEntity(projectile);
+                    pLevel.playSound(player,player.blockPosition(), SoundEvents.PLAYER_ATTACK_SWEEP,SoundSource.PLAYERS,1,1);
                 }
                 pStack.getTag().putBoolean("using", false);
             }
@@ -61,6 +74,7 @@ public class DeflectSwordItem extends SwordItem {
                 Vec3 playerLook = player.getViewVector(1);
                 Vec3 dashVec = new Vec3(playerLook.x(), playerLook.y(), playerLook.z());
                 player.setDeltaMovement(dashVec);
+                pLevel.playSound(player,player.blockPosition(), SoundEvents.PLAYER_ATTACK_SWEEP,SoundSource.PLAYERS,1,1);
             }
         }
 
@@ -107,6 +121,10 @@ public class DeflectSwordItem extends SwordItem {
                 }
             }
         }
+    }
+    @Override
+    public UseAnim getUseAnimation(ItemStack pStack) {
+        return UseAnim.BLOCK;
     }
 
     //////////////////////////////////////////EVENT//////////////////////////////////////////////////////

@@ -15,6 +15,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.phys.EntityHitResult;
@@ -23,11 +24,14 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.network.NetworkHooks;
 import net.theholyraj.rajswordmod.world.entity.ModEntities;
+import net.theholyraj.rajswordmod.world.item.ModItems;
 
 public class DashProjectileEntity extends Projectile {
     private static final EntityDataAccessor<Boolean> HIT =
             SynchedEntityData.defineId(DashProjectileEntity.class, EntityDataSerializers.BOOLEAN);
     private int counter = 0;
+    private ItemStack sword;
+    private Player player;
 
     public DashProjectileEntity(EntityType<? extends Projectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -53,7 +57,7 @@ public class DashProjectileEntity extends Projectile {
             }
         }
 
-        if (this.tickCount >= 15) {
+        if (this.tickCount >= 25) {
             this.remove(RemovalReason.DISCARDED);
         }
 
@@ -94,11 +98,9 @@ public class DashProjectileEntity extends Projectile {
         this.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.PLAYER_ATTACK_CRIT, SoundSource.NEUTRAL,
                 2F, 1F);
 
+        float damage = 9f;
         LivingEntity livingentity = owner instanceof LivingEntity ? (LivingEntity)owner : null;
-        float damage = 2f;
-        boolean hurt = hitEntity.hurt(this.damageSources().mobProjectile(this, livingentity), damage);
-        if (hurt) {
-        }
+        hitEntity.hurt(this.damageSources().mobProjectile(this, livingentity), damage);
     }
 
     @Override
@@ -121,6 +123,7 @@ public class DashProjectileEntity extends Projectile {
         }
     }
 
+
     @Override
     protected void defineSynchedData() {
         this.entityData.define(HIT, false);
@@ -129,5 +132,13 @@ public class DashProjectileEntity extends Projectile {
     @Override
     public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
+    }
+
+    public void setSword(ItemStack sword) {
+        this.sword = sword;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
     }
 }

@@ -1,3 +1,4 @@
 {
-  "sounds.rajswordmod.switch": "*Sword Ready*"
+  "sounds.rajswordmod.switch": "*Sword Ready*",
+  "item.rajswordmod.deflect_sword": "Arrow Render"
 }
