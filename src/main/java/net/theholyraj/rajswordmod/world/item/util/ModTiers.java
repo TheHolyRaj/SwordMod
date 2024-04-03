@@ -15,6 +15,6 @@ import java.util.List;
 public class ModTiers {
     public static final Tier FABLED = TierSortingRegistry.registerTier(
             new ForgeTier(5, 2500, 9.0F, 4.0F, 20,
-                    Tags.Blocks.NEEDS_NETHERITE_TOOL, () -> Ingredient.of(ModItems.ALEXANDRITE.get())),
+                    Tags.Blocks.NEEDS_NETHERITE_TOOL, () -> Ingredient.of()),
             new ResourceLocation(SwordMod.MODID, "fabled"), List.of(Tiers.NETHERITE), List.of());
 }

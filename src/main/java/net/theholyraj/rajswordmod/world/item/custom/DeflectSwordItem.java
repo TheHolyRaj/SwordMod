@@ -30,6 +30,7 @@ import net.theholyraj.rajswordmod.SwordMod;
 import net.theholyraj.rajswordmod.client.sound.ModSounds;
 import net.theholyraj.rajswordmod.network.ModMessages;
 import net.theholyraj.rajswordmod.network.packet.DeflectParticleS2CPacket;
+import net.theholyraj.rajswordmod.world.config.ModCommonConfigs;
 import net.theholyraj.rajswordmod.world.entity.custom.DashProjectileEntity;
 import net.theholyraj.rajswordmod.world.item.ModItems;
 
@@ -53,14 +54,13 @@ public class DeflectSwordItem extends SwordItem {
     @Override
     public void releaseUsing(ItemStack pStack, Level pLevel, LivingEntity pLivingEntity, int pTimeCharged) {
         if (!pLevel.isClientSide() && pLivingEntity instanceof Player player) {
-            if (pStack.hasTag()){
+            if (pStack.hasTag() && pStack.getTag().contains("using")){
                 if (pStack.hasTag() && pStack.getTag().getBoolean("using")){
-                    player.getCooldowns().addCooldown(this, 50);
+                    player.getCooldowns().addCooldown(this, ModCommonConfigs.ARROW_RENDER_COOLDOWN.get());
                     DashProjectileEntity projectile = new DashProjectileEntity(pLevel, player);
-                    projectile.setSword(pStack);
-                    projectile.setPlayer(player);
-                    projectile.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 1.5F, 0);
+                    projectile.shootFromRotation(player, player.getXRot(), player.getYRot(), player.getXRot(), 1.5F, 0);
                     pLevel.addFreshEntity(projectile);
+                    pStack.setDamageValue(1);
                     pLevel.playSound(player,player.blockPosition(), SoundEvents.PLAYER_ATTACK_SWEEP,SoundSource.PLAYERS,1,1);
                 }
                 pStack.getTag().putBoolean("using", false);
@@ -84,7 +84,7 @@ public class DeflectSwordItem extends SwordItem {
     @Override
     public void onUseTick(Level pLevel, LivingEntity pLivingEntity, ItemStack pStack, int pRemainingUseDuration) {
         if (pLivingEntity instanceof Player player){
-            if (pRemainingUseDuration < 71960){
+            if (pRemainingUseDuration < 72000 - ModCommonConfigs.ARROW_RENDER_CHARGE_TIME.get()){
                 deleteNearbyProjectiles(player, pStack);
                 if (pStack.hasTag()){
                     pStack.getTag().putBoolean("using", true);
@@ -94,7 +94,7 @@ public class DeflectSwordItem extends SwordItem {
                     pStack.getTag().putBoolean("using", true);
                 }
             }
-            if (pRemainingUseDuration == 71960 && pLevel.isClientSide()){
+            if (pRemainingUseDuration == 72000 - ModCommonConfigs.ARROW_RENDER_CHARGE_TIME.get() && pLevel.isClientSide()){
                 pLevel.playSound((Player)pLivingEntity,pLivingEntity.blockPosition(), ModSounds.SWITCH.get(), SoundSource.PLAYERS,1f,1f);
             }
         }
@@ -115,7 +115,7 @@ public class DeflectSwordItem extends SwordItem {
             if (projectile.distanceToSqr(player) < 7){
                 player.level().playSound(null, projectile.blockPosition(), ModSounds.PROJECTILE_SLASH.get(), SoundSource.PLAYERS,0.1f,1f);
                 if (!player.level().isClientSide()){
-                    ModMessages.sendToClients(new DeflectParticleS2CPacket(projectile.getX(),projectile.getY(),projectile.getZ()));
+                    ModMessages.sendToClients(new DeflectParticleS2CPacket(projectile.position().x(),projectile.position().y(),projectile.position().z()));
                     projectile.remove(Entity.RemovalReason.DISCARDED);
                     stack.setDamageValue(1);
                 }

@@ -23,6 +23,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.network.NetworkHooks;
+import net.theholyraj.rajswordmod.world.config.ModCommonConfigs;
 import net.theholyraj.rajswordmod.world.entity.ModEntities;
 import net.theholyraj.rajswordmod.world.item.ModItems;
 
@@ -30,8 +31,6 @@ public class DashProjectileEntity extends Projectile {
     private static final EntityDataAccessor<Boolean> HIT =
             SynchedEntityData.defineId(DashProjectileEntity.class, EntityDataSerializers.BOOLEAN);
     private int counter = 0;
-    private ItemStack sword;
-    private Player player;
 
     public DashProjectileEntity(EntityType<? extends Projectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -39,10 +38,10 @@ public class DashProjectileEntity extends Projectile {
     public DashProjectileEntity(Level pLevel, Player player) {
         super(ModEntities.DASH_PROJECTILE.get(), pLevel);
         setOwner(player);
-        BlockPos blockpos = player.blockPosition();
-        double d0 = (double)blockpos.getX() + 0.5D;
-        double d1 = (double)blockpos.getY() + 1.75D;
-        double d2 = (double)blockpos.getZ() + 0.5D;
+        Vec3 blockpos = player.position();
+        double d0 = blockpos.x() ;
+        double d1 = blockpos.y() + 1.75D;
+        double d2 = blockpos.z() ;
         this.moveTo(d0, d1, d2, this.getYRot(), this.getXRot());
         Vec3 vec3 = this.getDeltaMovement();
         this.setDeltaMovement(vec3.scale(0.5));
@@ -98,7 +97,7 @@ public class DashProjectileEntity extends Projectile {
         this.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.PLAYER_ATTACK_CRIT, SoundSource.NEUTRAL,
                 2F, 1F);
 
-        float damage = 9f;
+        float damage = 8;
         LivingEntity livingentity = owner instanceof LivingEntity ? (LivingEntity)owner : null;
         hitEntity.hurt(this.damageSources().mobProjectile(this, livingentity), damage);
     }
@@ -132,13 +131,5 @@ public class DashProjectileEntity extends Projectile {
     @Override
     public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
-    }
-
-    public void setSword(ItemStack sword) {
-        this.sword = sword;
-    }
-
-    public void setPlayer(Player player) {
-        this.player = player;
     }
 }
