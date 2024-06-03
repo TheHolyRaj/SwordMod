@@ -46,7 +46,6 @@ public class DeflectSwordItem extends SwordItem {
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
         if (pUsedHand == InteractionHand.MAIN_HAND){
             pPlayer.startUsingItem(pUsedHand);
-
         }
         return super.use(pLevel, pPlayer, pUsedHand);
     }
@@ -57,10 +56,9 @@ public class DeflectSwordItem extends SwordItem {
             if (pStack.hasTag() && pStack.getTag().contains("using")){
                 if (pStack.hasTag() && pStack.getTag().getBoolean("using")){
                     player.getCooldowns().addCooldown(this, ModCommonConfigs.ARROW_RENDER_COOLDOWN.get());
-                    DashProjectileEntity projectile = new DashProjectileEntity(pLevel, player);
-                    projectile.shootFromRotation(player, player.getXRot(), player.getYRot(), player.getXRot(), 1.5F, 0);
-                    pLevel.addFreshEntity(projectile);
-                    pStack.setDamageValue(1);
+                 //   DashProjectileEntity projectile = new DashProjectileEntity(pLevel, player);
+                 //   projectile.shootFromRotation(player, player.getXRot(), player.getYRot(), player.getXRot(), 1.5F, 0);
+                 //   pLevel.addFreshEntity(projectile);
                     pLevel.playSound(player,player.blockPosition(), SoundEvents.PLAYER_ATTACK_SWEEP,SoundSource.PLAYERS,1,1);
                 }
                 pStack.getTag().putBoolean("using", false);
@@ -106,6 +104,11 @@ public class DeflectSwordItem extends SwordItem {
         return 72000;
     }
 
+    @Override
+    public UseAnim getUseAnimation(ItemStack pStack) {
+        return UseAnim.BLOCK;
+    }
+
     private void deleteNearbyProjectiles(Player player, ItemStack stack){
         Vec3 center = new Vec3(player.blockPosition().getX(),player.blockPosition().getY(),player.blockPosition().getZ());
         List<Projectile> projectiles = player.level().getEntitiesOfClass(Projectile.class, new AABB(center,center).inflate(6), e-> true).stream()
@@ -122,11 +125,6 @@ public class DeflectSwordItem extends SwordItem {
             }
         }
     }
-    @Override
-    public UseAnim getUseAnimation(ItemStack pStack) {
-        return UseAnim.BLOCK;
-    }
-
     //////////////////////////////////////////EVENT//////////////////////////////////////////////////////
     @SubscribeEvent
     public static void projectileFailsafe(ProjectileImpactEvent event){

@@ -15,11 +15,12 @@ public class ModCreativeModeTabs {
             DeferredRegister.create(Registries.CREATIVE_MODE_TAB, SwordMod.MODID);
 
     public static final RegistryObject<CreativeModeTab> MOD_TAB = CREATIVE_MODE_TABS.register("sword_tab",
-            () -> CreativeModeTab.builder().icon(() -> new ItemStack(ModItems.DEFLECT_SWORD.get()))
+            () -> CreativeModeTab.builder().icon(() -> new ItemStack(ModItems.SENTINEL_SWORD.get()))
                     .title(Component.translatable("creativetab.sword_tab"))
                     .displayItems((displayParameters, output) -> {
                         output.accept(ModItems.DEFLECT_SWORD.get());
                         output.accept(ModItems.SENTINEL_SWORD.get());
+                        output.accept(ModItems.KNOCKBACK_SWORD.get());
 
                     }).build());
 

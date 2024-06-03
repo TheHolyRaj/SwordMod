@@ -16,6 +16,9 @@ public class ModSounds {
 
     public static final RegistryObject<SoundEvent> PROJECTILE_SLASH = registerSoundEvents("projectile_slash");
 
+    public static final RegistryObject<SoundEvent> BLOCK_DAMAGE = registerSoundEvents("block_damage");
+
+
 
 
     private static RegistryObject<SoundEvent> registerSoundEvents(String name) {

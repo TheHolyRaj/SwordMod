@@ -2,6 +2,7 @@
   "sounds.rajswordmod.switch": "*Sword Ready*",
   "item.rajswordmod.deflect_sword": "Arrow Render",
   "item.rajswordmod.sentinel_sword": "Sentinel Sword",
+  "item.rajswordmod.knockback_sword": "Knockback Sword",
 
 
   "creativetab.sword_tab": "Renowned Blades"

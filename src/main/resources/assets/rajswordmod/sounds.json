@@ -10,5 +10,11 @@
     "sounds": [
       "rajswordmod:projectile_slash1"
     ]
+  },
+  "block_damage": {
+    "subtitle": "sounds.rajswordmod.block_damage",
+    "sounds": [
+      "rajswordmod:block_damage"
+    ]
   }
 }
