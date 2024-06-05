@@ -2,6 +2,9 @@ package net.theholyraj.rajswordmod.world.item.custom;
 
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.damagesource.DamageSource;
@@ -17,6 +20,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.theholyraj.rajswordmod.client.particle.ModParticles;
+import net.theholyraj.rajswordmod.world.config.ModCommonConfigs;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,11 +39,35 @@ public class KnockbackSwordItem extends SwordItem {
 
     @Override
     public void onUseTick(Level pLevel, LivingEntity pLivingEntity, ItemStack pStack, int pRemainingUseDuration) {
-        attack(pLevel, pLivingEntity);
-     //   pLivingEntity.getBoundingBox().getV
+        if (72000 - pRemainingUseDuration == ModCommonConfigs.KNOCKBACK_SWORD_CHARGE_TIME.get()/3){
+            pLevel.playSound(pLivingEntity,pLivingEntity.blockPosition(), SoundEvents.PLAYER_ATTACK_CRIT, SoundSource.PLAYERS,1,1);
+        }
+        if (72000 - pRemainingUseDuration == (ModCommonConfigs.KNOCKBACK_SWORD_CHARGE_TIME.get()/3 + ModCommonConfigs.KNOCKBACK_SWORD_CHARGE_TIME.get()/3)){
+            pLevel.playSound(pLivingEntity,pLivingEntity.blockPosition(), SoundEvents.PLAYER_ATTACK_CRIT, SoundSource.PLAYERS,1,1);
+        }
+        if (72000 - pRemainingUseDuration == ModCommonConfigs.KNOCKBACK_SWORD_CHARGE_TIME.get()){
+            pLevel.playSound(pLivingEntity,pLivingEntity.blockPosition(), SoundEvents.PLAYER_ATTACK_CRIT, SoundSource.PLAYERS,1,1);
+        }
     }
 
-    public void attack(Level pLevel, LivingEntity pLivingEntity) {
+    @Override
+    public void releaseUsing(ItemStack pStack, Level pLevel, LivingEntity pLivingEntity, int pTimeCharged) {
+        System.out.println(pTimeCharged);
+
+        if (72000 - pTimeCharged > ModCommonConfigs.KNOCKBACK_SWORD_CHARGE_TIME.get()){
+            attack(pLevel,pLivingEntity,3);
+        }
+        else if (72000 - pTimeCharged > (ModCommonConfigs.KNOCKBACK_SWORD_CHARGE_TIME.get()/3 + ModCommonConfigs.KNOCKBACK_SWORD_CHARGE_TIME.get()/3)){
+            attack(pLevel,pLivingEntity,2);
+        }
+        else if (72000 - pTimeCharged > ModCommonConfigs.KNOCKBACK_SWORD_CHARGE_TIME.get()/3){
+            attack(pLevel,pLivingEntity,1);
+        }
+
+        super.releaseUsing(pStack, pLevel, pLivingEntity, pTimeCharged);
+    }
+
+    public void attack(Level pLevel, LivingEntity pLivingEntity, int charge) {
         Vec3 rightVector;
         Vec3 upVector;
         Vec3 viewVector;
@@ -70,7 +98,7 @@ public class KnockbackSwordItem extends SwordItem {
         Vec3 leftVector = rightVector.scale(-1);
 
         // Calculate the half dimensions to determine offsets
-        double length = 3;
+        double length = 2;
         double halfLength = length / 2.0;
         double width = 1;
         double halfWidth = width / 2.0;
@@ -116,17 +144,29 @@ public class KnockbackSwordItem extends SwordItem {
         addParticle(pLevel, aabb2);
         addParticle(pLevel, aabb3);
 
+        Vec3 launchCode =new Vec3(viewVector.x *(10 * charge)
+                ,viewVector.y *(10 * charge)
+                , viewVector.z *(10 * charge));
+        if (pLevel.isClientSide){
+            return;
+        }
+
         for (Entity entity : list1) {
             entity.hurt(pLevel.damageSources().playerAttack((Player) pLivingEntity), 6);
-            pLivingEntity.sendSystemMessage(Component.literal("hit"));
+            entity.setDeltaMovement(launchCode);
+            pLivingEntity.sendSystemMessage(Component.literal("hit" + charge));
         }
         for (Entity entity : list2) {
             entity.hurt(pLevel.damageSources().playerAttack((Player) pLivingEntity), 6);
-            pLivingEntity.sendSystemMessage(Component.literal("hit2"));
+            entity.setDeltaMovement(launchCode);
+
+            pLivingEntity.sendSystemMessage(Component.literal("hit2" + charge));
         }
         for (Entity entity : list3) {
             entity.hurt(pLevel.damageSources().playerAttack((Player) pLivingEntity), 6);
-            pLivingEntity.sendSystemMessage(Component.literal("hit3"));
+            entity.setDeltaMovement(launchCode);
+
+            pLivingEntity.sendSystemMessage(Component.literal("hit3" + charge));
         }
     }
 

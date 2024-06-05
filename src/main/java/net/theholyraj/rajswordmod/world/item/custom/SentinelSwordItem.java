@@ -56,7 +56,7 @@ public class SentinelSwordItem extends SwordItem {
     @Override
     public void onStopUsing(ItemStack stack, LivingEntity entity, int count) {
         if (entity instanceof Player player){
-            player.getCooldowns().addCooldown(this, 40);
+            player.getCooldowns().addCooldown(this, ModCommonConfigs.SENTINEL_SWORD_COOLDOWN.get());
         }
         super.onStopUsing(stack, entity, count);
     }

@@ -51,57 +51,36 @@ public class DeflectSwordItem extends SwordItem {
     }
 
     @Override
-    public void releaseUsing(ItemStack pStack, Level pLevel, LivingEntity pLivingEntity, int pTimeCharged) {
-        if (!pLevel.isClientSide() && pLivingEntity instanceof Player player) {
-            if (pStack.hasTag() && pStack.getTag().contains("using")){
-                if (pStack.hasTag() && pStack.getTag().getBoolean("using")){
-                    player.getCooldowns().addCooldown(this, ModCommonConfigs.ARROW_RENDER_COOLDOWN.get());
-                 //   DashProjectileEntity projectile = new DashProjectileEntity(pLevel, player);
-                 //   projectile.shootFromRotation(player, player.getXRot(), player.getYRot(), player.getXRot(), 1.5F, 0);
-                 //   pLevel.addFreshEntity(projectile);
-                    pLevel.playSound(player,player.blockPosition(), SoundEvents.PLAYER_ATTACK_SWEEP,SoundSource.PLAYERS,1,1);
-                }
-                pStack.getTag().putBoolean("using", false);
-            }
-            else {
-                pStack.setTag(new CompoundTag());
-                pStack.getTag().putBoolean("using", false);
-            }
-        }else if (pLivingEntity instanceof Player player){
-            if (pStack.hasTag() && pStack.getTag().getBoolean("using")){
-                Vec3 playerLook = player.getViewVector(1);
-                Vec3 dashVec = new Vec3(playerLook.x(), playerLook.y(), playerLook.z());
-                player.setDeltaMovement(dashVec);
-                pLevel.playSound(player,player.blockPosition(), SoundEvents.PLAYER_ATTACK_SWEEP,SoundSource.PLAYERS,1,1);
-            }
-        }
-
-        super.releaseUsing(pStack, pLevel, pLivingEntity, pTimeCharged);
-    }
-
-    @Override
     public void onUseTick(Level pLevel, LivingEntity pLivingEntity, ItemStack pStack, int pRemainingUseDuration) {
         if (pLivingEntity instanceof Player player){
-            if (pRemainingUseDuration < 72000 - ModCommonConfigs.ARROW_RENDER_CHARGE_TIME.get()){
-                deleteNearbyProjectiles(player, pStack);
-                if (pStack.hasTag()){
-                    pStack.getTag().putBoolean("using", true);
-                }
-                else {
-                    pStack.setTag(new CompoundTag());
-                    pStack.getTag().putBoolean("using", true);
-                }
-            }
-            if (pRemainingUseDuration == 72000 - ModCommonConfigs.ARROW_RENDER_CHARGE_TIME.get() && pLevel.isClientSide()){
-                pLevel.playSound((Player)pLivingEntity,pLivingEntity.blockPosition(), ModSounds.SWITCH.get(), SoundSource.PLAYERS,1f,1f);
-            }
+            deleteNearbyProjectiles(player, pStack);
         }
         super.onUseTick(pLevel, pLivingEntity, pStack, pRemainingUseDuration);
     }
 
     @Override
+    public void onStopUsing(ItemStack stack, LivingEntity entity, int count) {
+        if (entity instanceof Player player){
+            player.getCooldowns().addCooldown(this, ModCommonConfigs.ARROW_RENDER_COOLDOWN.get());
+            if (!player.isShiftKeyDown()){
+                player.level().playSound(player,player.blockPosition(), SoundEvents.PLAYER_ATTACK_SWEEP,SoundSource.PLAYERS,1,1);
+
+            }
+        }
+        if (entity.level().isClientSide() && entity instanceof Player player){
+            if (!player.isShiftKeyDown()){
+                Vec3 playerLook = player.getViewVector(1);
+                Vec3 dashVec = new Vec3(playerLook.x(), playerLook.y(), playerLook.z());
+                player.setDeltaMovement(dashVec);
+                player.level().playSound(player,player.blockPosition(), SoundEvents.PLAYER_ATTACK_SWEEP,SoundSource.PLAYERS,1,1);
+            }
+        }
+        super.onStopUsing(stack, entity, count);
+    }
+
+    @Override
     public int getUseDuration(ItemStack pStack) {
-        return 72000;
+        return ModCommonConfigs.ARROW_RENDER_CHARGE_TIME.get();
     }
 
     @Override
@@ -131,13 +110,11 @@ public class DeflectSwordItem extends SwordItem {
         if (event.getRayTraceResult() instanceof EntityHitResult result){
             if (result.getEntity() instanceof Player player){
                 if (!player.level().isClientSide() && player.getMainHandItem().is(ModItems.DEFLECT_SWORD.get())){
-                    if (player.getMainHandItem().hasTag() && player.getMainHandItem().getTag().contains("using")){
-                        if (player.getMainHandItem().getTag().getBoolean("using")){
-                            Projectile projectile = event.getProjectile();
-                            ModMessages.sendToClients(new DeflectParticleS2CPacket(projectile.getX(),projectile.getY(),projectile.getZ()));
-                            event.setImpactResult(ProjectileImpactEvent.ImpactResult.STOP_AT_CURRENT_NO_DAMAGE);
-                            player.getMainHandItem().setDamageValue(1);
-                        }
+                    if (player.getMainHandItem().hasTag() && player.isUsingItem()){
+                        Projectile projectile = event.getProjectile();
+                        ModMessages.sendToClients(new DeflectParticleS2CPacket(projectile.getX(),projectile.getY(),projectile.getZ()));
+                        event.setImpactResult(ProjectileImpactEvent.ImpactResult.STOP_AT_CURRENT_NO_DAMAGE);
+                        player.getMainHandItem().setDamageValue(1);
                     }
                 }
             }
