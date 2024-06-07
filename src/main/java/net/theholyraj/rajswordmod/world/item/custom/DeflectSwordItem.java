@@ -1,6 +1,7 @@
 package net.theholyraj.rajswordmod.world.item.custom;
 
 import com.google.common.collect.Multimap;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.nbt.CompoundTag;
@@ -64,7 +65,6 @@ public class DeflectSwordItem extends SwordItem {
             player.getCooldowns().addCooldown(this, ModCommonConfigs.ARROW_RENDER_COOLDOWN.get());
             if (!player.isShiftKeyDown()){
                 player.level().playSound(player,player.blockPosition(), SoundEvents.PLAYER_ATTACK_SWEEP,SoundSource.PLAYERS,1,1);
-
             }
         }
         if (entity.level().isClientSide() && entity instanceof Player player){

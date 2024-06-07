@@ -1,5 +1,8 @@
 package net.theholyraj.rajswordmod.world.item.custom;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.sounds.SoundInstance;
+import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
@@ -19,13 +22,26 @@ import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.theholyraj.rajswordmod.client.particle.ModParticles;
+import net.theholyraj.rajswordmod.client.sound.ModSounds;
+import net.theholyraj.rajswordmod.client.sound.custom.ChargeTickableSound;
 import net.theholyraj.rajswordmod.world.config.ModCommonConfigs;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class KnockbackSwordItem extends SwordItem {
+    @OnlyIn(Dist.CLIENT)
+    private ChargeTickableSound instance1;
+    @OnlyIn(Dist.CLIENT)
+    private ChargeTickableSound instance2;
+    @OnlyIn(Dist.CLIENT)
+    private ChargeTickableSound instance3;
+    @OnlyIn(Dist.CLIENT)
+    SoundManager manager;
+
     public KnockbackSwordItem(Tier pTier, int pAttackDamageModifier, float pAttackSpeedModifier, Properties pProperties) {
         super(pTier, pAttackDamageModifier, pAttackSpeedModifier, pProperties);
     }
@@ -39,14 +55,42 @@ public class KnockbackSwordItem extends SwordItem {
 
     @Override
     public void onUseTick(Level pLevel, LivingEntity pLivingEntity, ItemStack pStack, int pRemainingUseDuration) {
-        if (72000 - pRemainingUseDuration == ModCommonConfigs.KNOCKBACK_SWORD_CHARGE_TIME.get()/3){
-            pLevel.playSound(pLivingEntity,pLivingEntity.blockPosition(), SoundEvents.PLAYER_ATTACK_CRIT, SoundSource.PLAYERS,1,1);
+        if (pLevel.isClientSide){
+            getManager();
+            createInstance((Player) pLivingEntity);
+            if (72000 - pRemainingUseDuration == ModCommonConfigs.KNOCKBACK_SWORD_CHARGE_TIME.get()){
+                if (manager.isActive(instance2)){
+                    manager.stop(instance2);
+                }
+                manager.play(instance3);
+            }
+            else if (72000 - pRemainingUseDuration == (ModCommonConfigs.KNOCKBACK_SWORD_CHARGE_TIME.get()/3 + ModCommonConfigs.KNOCKBACK_SWORD_CHARGE_TIME.get()/3)){
+                if (manager.isActive(instance1)){
+                    manager.stop(instance1);
+                }
+                manager.play(instance2);
+            }
+            else if (72000 - pRemainingUseDuration == ModCommonConfigs.KNOCKBACK_SWORD_CHARGE_TIME.get()/3){
+                manager.play(instance1);
+            }
         }
-        if (72000 - pRemainingUseDuration == (ModCommonConfigs.KNOCKBACK_SWORD_CHARGE_TIME.get()/3 + ModCommonConfigs.KNOCKBACK_SWORD_CHARGE_TIME.get()/3)){
-            pLevel.playSound(pLivingEntity,pLivingEntity.blockPosition(), SoundEvents.PLAYER_ATTACK_CRIT, SoundSource.PLAYERS,1,1);
+    }
+    @OnlyIn(Dist.CLIENT)
+    public void createInstance(Player player){
+        if (instance1==null){
+            instance1 = new ChargeTickableSound(0.8f, player);
         }
-        if (72000 - pRemainingUseDuration == ModCommonConfigs.KNOCKBACK_SWORD_CHARGE_TIME.get()){
-            pLevel.playSound(pLivingEntity,pLivingEntity.blockPosition(), SoundEvents.PLAYER_ATTACK_CRIT, SoundSource.PLAYERS,1,1);
+        if (instance2==null){
+            instance2 = new ChargeTickableSound(1.2f, player);
+        }
+        if (instance3==null){
+            instance3 = new ChargeTickableSound(1.6f, player);
+        }
+    }
+    @OnlyIn(Dist.CLIENT)
+    public void getManager(){
+        if (manager == null){
+            manager = Minecraft.getInstance().getSoundManager();
         }
     }
 
@@ -98,11 +142,11 @@ public class KnockbackSwordItem extends SwordItem {
         Vec3 leftVector = rightVector.scale(-1);
 
         // Calculate the half dimensions to determine offsets
-        double length = 2;
+        double length = 2.25;
         double halfLength = length / 2.0;
-        double width = 1;
+        double width = 1.5;
         double halfWidth = width / 2.0;
-        double height = 1;
+        double height = 1.5;
         double halfHeight = height / 2.0;
 
         // Adjust the position to place the nearest face of the cuboid in front of the player
@@ -144,29 +188,43 @@ public class KnockbackSwordItem extends SwordItem {
         addParticle(pLevel, aabb2);
         addParticle(pLevel, aabb3);
 
-        Vec3 launchCode =new Vec3(viewVector.x *(10 * charge)
-                ,viewVector.y *(10 * charge)
-                , viewVector.z *(10 * charge));
-        if (pLevel.isClientSide){
-            return;
-        }
+        double launchY ;
+        if (viewVector.y< 0.5){
+            launchY = 0.5;
+        }else launchY = viewVector.y;
+
+        Vec3 launchCode =new Vec3(viewVector.x *(2 + charge)
+                ,launchY *(2 + charge)
+                , viewVector.z *(2 + charge));
+
+        boolean soundFlag = false;
 
         for (Entity entity : list1) {
-            entity.hurt(pLevel.damageSources().playerAttack((Player) pLivingEntity), 6);
+            soundFlag = true;
+            if (!pLevel.isClientSide){
+                entity.hurt(pLevel.damageSources().playerAttack((Player) pLivingEntity), 6);
+            }
+            entity.setDeltaMovement(0,0,0);
             entity.setDeltaMovement(launchCode);
-            pLivingEntity.sendSystemMessage(Component.literal("hit" + charge));
         }
         for (Entity entity : list2) {
-            entity.hurt(pLevel.damageSources().playerAttack((Player) pLivingEntity), 6);
+            soundFlag = true;
+            if (!pLevel.isClientSide) {
+                entity.hurt(pLevel.damageSources().playerAttack((Player) pLivingEntity), 6);
+            }
+            entity.setDeltaMovement(0,0,0);
             entity.setDeltaMovement(launchCode);
-
-            pLivingEntity.sendSystemMessage(Component.literal("hit2" + charge));
         }
         for (Entity entity : list3) {
-            entity.hurt(pLevel.damageSources().playerAttack((Player) pLivingEntity), 6);
+            soundFlag = true;
+            if (!pLevel.isClientSide){
+                entity.hurt(pLevel.damageSources().playerAttack((Player) pLivingEntity), 4);
+            }
+            entity.setDeltaMovement(0,0,0);
             entity.setDeltaMovement(launchCode);
-
-            pLivingEntity.sendSystemMessage(Component.literal("hit3" + charge));
+        }
+        if (soundFlag){
+            pLevel.playSound(pLivingEntity,pLivingEntity.blockPosition(),SoundEvents.GENERIC_EXPLODE,SoundSource.PLAYERS,1f,1f);
         }
     }
 

@@ -16,5 +16,11 @@
     "sounds": [
       "rajswordmod:block_damage"
     ]
+  },
+  "charge_knockback": {
+    "subtitle": "sounds.rajswordmod.charge_knockback",
+    "sounds": [
+      "rajswordmod:charge_knockback"
+    ]
   }
 }
