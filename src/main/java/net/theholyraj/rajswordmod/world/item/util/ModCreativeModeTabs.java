@@ -21,6 +21,7 @@ public class ModCreativeModeTabs {
                         output.accept(ModItems.DEFLECT_SWORD.get());
                         output.accept(ModItems.SENTINEL_SWORD.get());
                         output.accept(ModItems.KNOCKBACK_SWORD.get());
+                        output.accept(ModItems.HOLY_SWORD.get());
 
                     }).build());
 

@@ -19,6 +19,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -31,6 +34,7 @@ import net.theholyraj.rajswordmod.world.config.ModCommonConfigs;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class KnockbackSwordItem extends SwordItem {
     @OnlyIn(Dist.CLIENT)
@@ -55,6 +59,12 @@ public class KnockbackSwordItem extends SwordItem {
 
     @Override
     public void onUseTick(Level pLevel, LivingEntity pLivingEntity, ItemStack pStack, int pRemainingUseDuration) {
+        if (pLevel.isClientSide){
+            playSounds(pLevel,pLivingEntity,pRemainingUseDuration);
+        }
+    }
+    @OnlyIn(Dist.CLIENT)
+    private void playSounds(Level pLevel, LivingEntity pLivingEntity, int pRemainingUseDuration){
         if (pLevel.isClientSide){
             getManager();
             createInstance((Player) pLivingEntity);
@@ -95,23 +105,30 @@ public class KnockbackSwordItem extends SwordItem {
     }
 
     @Override
+    public void onStopUsing(ItemStack stack, LivingEntity entity, int count) {
+        if (entity instanceof Player player){
+            player.getCooldowns().addCooldown(this, ModCommonConfigs.KNOCKBACK_SWORD_COOLDOWN.get());
+        }
+        super.onStopUsing(stack, entity, count);
+    }
+
+    @Override
     public void releaseUsing(ItemStack pStack, Level pLevel, LivingEntity pLivingEntity, int pTimeCharged) {
-        System.out.println(pTimeCharged);
 
         if (72000 - pTimeCharged > ModCommonConfigs.KNOCKBACK_SWORD_CHARGE_TIME.get()){
-            attack(pLevel,pLivingEntity,3);
+            attack(pLevel,pLivingEntity,3, pStack);
         }
         else if (72000 - pTimeCharged > (ModCommonConfigs.KNOCKBACK_SWORD_CHARGE_TIME.get()/3 + ModCommonConfigs.KNOCKBACK_SWORD_CHARGE_TIME.get()/3)){
-            attack(pLevel,pLivingEntity,2);
+            attack(pLevel,pLivingEntity,2, pStack);
         }
         else if (72000 - pTimeCharged > ModCommonConfigs.KNOCKBACK_SWORD_CHARGE_TIME.get()/3){
-            attack(pLevel,pLivingEntity,1);
+            attack(pLevel,pLivingEntity,1, pStack);
         }
 
         super.releaseUsing(pStack, pLevel, pLivingEntity, pTimeCharged);
     }
 
-    public void attack(Level pLevel, LivingEntity pLivingEntity, int charge) {
+    public void attack(Level pLevel, LivingEntity pLivingEntity, int charge, ItemStack stack) {
         Vec3 rightVector;
         Vec3 upVector;
         Vec3 viewVector;
@@ -193,9 +210,9 @@ public class KnockbackSwordItem extends SwordItem {
             launchY = 0.5;
         }else launchY = viewVector.y;
 
-        Vec3 launchCode =new Vec3(viewVector.x *(2 + charge)
-                ,launchY *(2 + charge)
-                , viewVector.z *(2 + charge));
+        Vec3 launchCode =new Vec3(viewVector.x *(charge + (double)EnchantmentHelper.getEnchantmentLevel(Enchantments.KNOCKBACK,pLivingEntity)/2)
+                ,launchY *(charge + (double)EnchantmentHelper.getEnchantmentLevel(Enchantments.KNOCKBACK,pLivingEntity)/2)
+                , viewVector.z *(charge + (double)EnchantmentHelper.getEnchantmentLevel(Enchantments.KNOCKBACK,pLivingEntity)/2));
 
         boolean soundFlag = false;
 
@@ -211,6 +228,7 @@ public class KnockbackSwordItem extends SwordItem {
             soundFlag = true;
             if (!pLevel.isClientSide) {
                 entity.hurt(pLevel.damageSources().playerAttack((Player) pLivingEntity), 6);
+                stack.setDamageValue(4*charge);
             }
             entity.setDeltaMovement(0,0,0);
             entity.setDeltaMovement(launchCode);
@@ -219,6 +237,7 @@ public class KnockbackSwordItem extends SwordItem {
             soundFlag = true;
             if (!pLevel.isClientSide){
                 entity.hurt(pLevel.damageSources().playerAttack((Player) pLivingEntity), 4);
+
             }
             entity.setDeltaMovement(0,0,0);
             entity.setDeltaMovement(launchCode);
@@ -256,19 +275,23 @@ public class KnockbackSwordItem extends SwordItem {
         return corners;
     }
     public void addParticle(Level pLevel, Vec3 vec3){
-        pLevel.addParticle(ParticleTypes.BUBBLE,vec3.x, vec3.y, vec3.z, 0, 0, 0);
+        Random random = new Random();
+
+        pLevel.addParticle(ParticleTypes.ENCHANTED_HIT,vec3.x+ random.nextFloat(-0.5f,0.5f), vec3.y+ random.nextFloat(-1,1), vec3.z+ random.nextFloat(-1,1), 0, 0, 0);
 
     }
     public void addParticle(Level pLevel, AABB aabb){
-        pLevel.addParticle(ParticleTypes.FLAME,aabb.minX, aabb.minY, aabb.minZ, 0, 0, 0);
-        pLevel.addParticle(ParticleTypes.FLAME,aabb.minX, aabb.maxY, aabb.minZ, 0, 0, 0);
-        pLevel.addParticle(ParticleTypes.FLAME,aabb.minX, aabb.minY, aabb.maxZ, 0, 0, 0);
-        pLevel.addParticle(ParticleTypes.FLAME,aabb.minX, aabb.maxY, aabb.maxZ, 0, 0, 0);
+        Random random = new Random();
 
-        pLevel.addParticle(ParticleTypes.FLAME,aabb.maxX, aabb.minY, aabb.minZ, 0, 0, 0);
-        pLevel.addParticle(ParticleTypes.FLAME,aabb.maxX, aabb.maxY, aabb.minZ, 0, 0, 0);
-        pLevel.addParticle(ParticleTypes.FLAME,aabb.maxX, aabb.minY, aabb.maxZ, 0, 0, 0);
-        pLevel.addParticle(ParticleTypes.FLAME,aabb.maxX, aabb.maxY, aabb.maxZ, 0, 0, 0);
+        pLevel.addParticle(ParticleTypes.ENCHANTED_HIT,aabb.minX+ random.nextFloat(-0.3f,0.3f), aabb.minY+ random.nextFloat(-0.3f,0.3f), aabb.minZ+ random.nextFloat(-0.3f,0.3f), 0, 0, 0);
+        pLevel.addParticle(ParticleTypes.ENCHANTED_HIT,aabb.minX+ random.nextFloat(-0.3f,0.3f), aabb.maxY+ random.nextFloat(-0.3f,0.3f), aabb.minZ+ random.nextFloat(-0.3f,0.3f), 0, 0, 0);
+        pLevel.addParticle(ParticleTypes.ENCHANTED_HIT,aabb.minX+ random.nextFloat(-0.3f,0.3f), aabb.minY+ random.nextFloat(-0.3f,0.3f), aabb.maxZ+ random.nextFloat(-0.3f,0.3f), 0, 0, 0);
+        pLevel.addParticle(ParticleTypes.ENCHANTED_HIT,aabb.minX+ random.nextFloat(-0.3f,0.3f), aabb.maxY+ random.nextFloat(-0.3f,0.3f), aabb.maxZ+ random.nextFloat(-0.3f,0.3f), 0, 0, 0);
+
+        pLevel.addParticle(ParticleTypes.ENCHANTED_HIT,aabb.maxX+ random.nextFloat(-0.3f,0.3f), aabb.minY+ random.nextFloat(-0.3f,0.3f), aabb.minZ+ random.nextFloat(-0.3f,0.3f), 0, 0, 0);
+        pLevel.addParticle(ParticleTypes.ENCHANTED_HIT,aabb.maxX+ random.nextFloat(-0.3f,0.3f), aabb.maxY+ random.nextFloat(-0.3f,0.3f), aabb.minZ+ random.nextFloat(-0.3f,0.3f), 0, 0, 0);
+        pLevel.addParticle(ParticleTypes.ENCHANTED_HIT,aabb.maxX+ random.nextFloat(-0.3f,0.3f), aabb.minY+ random.nextFloat(-0.3f,0.3f), aabb.maxZ+ random.nextFloat(-0.3f,0.3f), 0, 0, 0);
+        pLevel.addParticle(ParticleTypes.ENCHANTED_HIT,aabb.maxX+ random.nextFloat(-0.3f,0.3f), aabb.maxY+ random.nextFloat(-0.3f,0.3f), aabb.maxZ+ random.nextFloat(-0.3f,0.3f), 0, 0, 0);
 
     }
 

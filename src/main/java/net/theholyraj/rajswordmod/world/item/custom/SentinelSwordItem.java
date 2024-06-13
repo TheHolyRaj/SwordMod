@@ -41,14 +41,7 @@ public class SentinelSwordItem extends SwordItem {
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
         if (pUsedHand == InteractionHand.MAIN_HAND){
             pPlayer.startUsingItem(pUsedHand);
-            ItemStack pStack = pPlayer.getItemInHand(pUsedHand);
-            if (pStack.hasTag()){
-                pStack.getTag().putFloat("damage", 0);
-            }
-            else {
-                pStack.setTag(new CompoundTag());
-                pStack.getTag().putFloat("damage", 0);
-            }
+            pLevel.playSound(pPlayer,pPlayer.blockPosition(),SoundEvents.ANVIL_LAND,SoundSource.PLAYERS,0.5f,1.3f);
         }
         return super.use(pLevel, pPlayer, pUsedHand);
     }

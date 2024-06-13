@@ -1,0 +1,19 @@
+{
+  "parent": "rajswordmod:item/knockback_sword",
+  "gui_light": "front",
+  "textures": {
+    "layer0": "rajswordmod:item/knockback_sword"
+  },
+  "display": {
+    "firstperson_righthand": {
+      "rotation": [ -5, 90,-45 ],
+      "translation": [ -4, 10, 3 ],
+      "scale": [ 0.75, 0.75, 0.75 ]
+    },
+    "firstperson_lefthand": {
+      "rotation": [ -15, -90, 45 ],
+      "translation": [ -4, 10, 3 ],
+      "scale": [ 0.75, 0.75, 0.75 ]
+    }
+  }
+}

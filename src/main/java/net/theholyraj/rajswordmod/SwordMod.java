@@ -27,6 +27,7 @@ import net.theholyraj.rajswordmod.world.config.ModCommonConfigs;
 import net.theholyraj.rajswordmod.world.entity.ModEntities;
 import net.theholyraj.rajswordmod.world.item.util.ModCreativeModeTabs;
 import net.theholyraj.rajswordmod.world.item.ModItems;
+import net.theholyraj.rajswordmod.world.mobeffects.ModMobEffects;
 import org.slf4j.Logger;
 
 @Mod(SwordMod.MODID)
@@ -39,6 +40,7 @@ public class SwordMod {
         ModItems.register(modEventBus);
         ModCreativeModeTabs.register(modEventBus);
         ModEntities.register(modEventBus);
+        ModMobEffects.register(modEventBus);
 
         ModSounds.register(modEventBus);
         ModParticles.register(modEventBus);

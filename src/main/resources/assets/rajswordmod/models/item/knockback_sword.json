@@ -2,5 +2,13 @@
   "parent": "minecraft:item/handheld",
   "textures": {
     "layer0": "rajswordmod:item/knockback_sword"
-  }
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "blocking": 1
+      },
+      "model": "rajswordmod:item/knockback_sword_blocking"
+    }
+  ]
 }

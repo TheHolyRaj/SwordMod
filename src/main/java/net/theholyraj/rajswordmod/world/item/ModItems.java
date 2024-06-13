@@ -8,6 +8,7 @@ import net.minecraftforge.registries.RegistryObject;
 import net.theholyraj.rajswordmod.SwordMod;
 import net.theholyraj.rajswordmod.world.config.ModCommonConfigs;
 import net.theholyraj.rajswordmod.world.item.custom.DeflectSwordItem;
+import net.theholyraj.rajswordmod.world.item.custom.HolySwordItem;
 import net.theholyraj.rajswordmod.world.item.custom.KnockbackSwordItem;
 import net.theholyraj.rajswordmod.world.item.custom.SentinelSwordItem;
 import net.theholyraj.rajswordmod.world.item.util.ModTiers;
@@ -23,6 +24,8 @@ public class ModItems {
             () -> new SentinelSwordItem(ModTiers.FABLED, 10-5,1.2f-4, new Item.Properties().fireResistant()));
     public static final RegistryObject<KnockbackSwordItem> KNOCKBACK_SWORD = ITEMS.register("knockback_sword",
             () -> new KnockbackSwordItem(ModTiers.FABLED, 8-5,1.6f-4, new Item.Properties().fireResistant()));
+    public static final RegistryObject<HolySwordItem> HOLY_SWORD = ITEMS.register("holy_sword",
+            () -> new HolySwordItem(ModTiers.FABLED, 8-5,1.6f-4, new Item.Properties().fireResistant()));
 
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);
