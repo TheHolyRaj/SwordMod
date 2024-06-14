@@ -6,7 +6,6 @@ public class ModCommonConfigs {
     public static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
     public static final ForgeConfigSpec SPEC;
 
-    public static final ForgeConfigSpec.ConfigValue<Integer> ARROW_RENDER_CHARGE_TIME;
     public static final ForgeConfigSpec.ConfigValue<Integer> ARROW_RENDER_COOLDOWN;
 
     public static final ForgeConfigSpec.ConfigValue<Integer> SENTINEL_SWORD_CHARGE_TIME;
@@ -30,7 +29,6 @@ public class ModCommonConfigs {
     static {
         BUILDER.push("Configs for Sword Mod");
 
-        ARROW_RENDER_CHARGE_TIME = BUILDER.comment("How long ArrowRender should be able to be used").define("ArrowRender Charge  Time", 50);
         ARROW_RENDER_COOLDOWN = BUILDER.comment("How long ArrowRender should go on cooldown").define("ArrowRender Cooldown", 100);
 
         SENTINEL_SWORD_CHARGE_TIME = BUILDER.comment("How long (in ticks) should SentinelSword charge!")

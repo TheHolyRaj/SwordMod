@@ -54,6 +54,12 @@ public class HolyExplosion extends Explosion {
     public void finalizeExplosion(boolean spawnParticles) {
         super.finalizeExplosion(spawnParticles);
     }
+
+    @Override
+    public DamageSource getDamageSource() {
+        return super.getDamageSource();
+    }
+
     /////////////////////////////////////////////////////////EVENT//////////////////////
     @SubscribeEvent
     public static void undeadDamageEvent(ExplosionEvent.Detonate event){

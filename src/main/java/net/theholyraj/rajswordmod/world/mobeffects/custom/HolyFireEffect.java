@@ -1,5 +1,6 @@
 package net.theholyraj.rajswordmod.world.mobeffects.custom;
 
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
@@ -24,7 +25,7 @@ public class HolyFireEffect extends MobEffect {
         if (holyDamage < ModCommonConfigs.MIN_HOLY_FIRE_DAMAGE.get()){
             holyDamage = ModCommonConfigs.MIN_HOLY_FIRE_DAMAGE.get();
         }
-        pLivingEntity.hurt(pLivingEntity.damageSources().magic(), holyDamage);
+        pLivingEntity.hurt(pLivingEntity.level().damageSources().magic(), holyDamage);
 
         super.applyEffectTick(pLivingEntity, pAmplifier);
     }

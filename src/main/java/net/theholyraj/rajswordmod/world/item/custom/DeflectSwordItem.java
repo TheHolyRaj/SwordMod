@@ -81,7 +81,7 @@ public class DeflectSwordItem extends SwordItem {
 
     @Override
     public int getUseDuration(ItemStack pStack) {
-        return ModCommonConfigs.ARROW_RENDER_CHARGE_TIME.get();
+        return 72000;
     }
 
     @Override
