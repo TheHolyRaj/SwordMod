@@ -47,6 +47,7 @@ import net.theholyraj.rajswordmod.world.damage.DamageSources;
 import net.theholyraj.rajswordmod.world.item.ModItems;
 import net.theholyraj.rajswordmod.world.mobeffects.ModMobEffects;
 import net.theholyraj.rajswordmod.world.mobeffects.custom.HolyFireEffect;
+import net.theholyraj.rajswordmod.world.mobeffects.custom.HolyFireEffectInstance;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -189,14 +190,16 @@ public class HolyExplosion extends Explosion {
     public static void undeadDamageEvent(ExplosionEvent.Detonate event){
         if (event.getExplosion() instanceof HolyExplosion){
             List<Entity> entities= event.getAffectedEntities();
+            entities.removeIf(mob-> !(mob instanceof LivingEntity entity));
             entities.removeIf(mob-> mob instanceof LivingEntity entity && entity.getMobType() != MobType.UNDEAD);
             for (Entity entity:entities){
                 if (entity instanceof WitherBoss witherBoss){
-                    witherBoss.forceAddEffect(new MobEffectInstance(ModMobEffects.HOLY_FIRE.get(),ModCommonConfigs.HOLY_FIRE_DURATION.get()),witherBoss);
+                    HolyFireEffectInstance effectInstance = new HolyFireEffectInstance(ModMobEffects.HOLY_FIRE.get(),ModCommonConfigs.HOLY_FIRE_DURATION.get());
+                    witherBoss.forceAddEffect(effectInstance,witherBoss);
                 }
                 if (entity instanceof LivingEntity livingEntity){
                     if (livingEntity.getMobType() == MobType.UNDEAD){
-                        livingEntity.addEffect(new MobEffectInstance(ModMobEffects.HOLY_FIRE.get(), ModCommonConfigs.HOLY_FIRE_DURATION.get()));
+                        livingEntity.addEffect(new HolyFireEffectInstance(ModMobEffects.HOLY_FIRE.get(), ModCommonConfigs.HOLY_FIRE_DURATION.get()));
                     }
                 }
             }

@@ -14,7 +14,7 @@ public class HolyExplosionParticle extends TextureSheetParticle {
         this.lifetime = 6 + this.random.nextInt(4);
         this.rCol = 1f;
         this.gCol = 1f;
-        this.bCol = 0.8f;
+        this.bCol = 0.7f;
         this.quadSize = 6.0F * (1.0F - (float)pQuadSizeMultiplier * 0.5F);
         this.sprites = pSprites;
         this.setSpriteFromAge(pSprites);
