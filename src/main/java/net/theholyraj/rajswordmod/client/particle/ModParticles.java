@@ -17,6 +17,8 @@ public class ModParticles {
     public static final RegistryObject<SimpleParticleType> DEFLECT_PARTICLES =
             PARTICLE_TYPES.register("deflect_particles", () -> new SimpleParticleType(true));
 
+    public static final RegistryObject<SimpleParticleType> HOLY_EXPLOSION_PARTICLES =
+            PARTICLE_TYPES.register("holy_explosion_particles", () -> new SimpleParticleType(true));
     public static void register(IEventBus eventBus) {
         PARTICLE_TYPES.register(eventBus);
     }

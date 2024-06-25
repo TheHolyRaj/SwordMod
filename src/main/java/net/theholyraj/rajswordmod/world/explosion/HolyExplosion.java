@@ -40,6 +40,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.theholyraj.rajswordmod.SwordMod;
+import net.theholyraj.rajswordmod.client.particle.ModParticles;
 import net.theholyraj.rajswordmod.client.sound.ModSounds;
 import net.theholyraj.rajswordmod.world.config.ModCommonConfigs;
 import net.theholyraj.rajswordmod.world.damage.DamageSources;
@@ -171,15 +172,9 @@ public class HolyExplosion extends Explosion {
         }
 
         if (spawnParticles) {
-            this.level.addParticle(ParticleTypes.EXPLOSION, this.x, this.y, this.z, 1.0D, 0.0D, 0.0D);
             if (this.level instanceof ServerLevel) {
                 ServerLevel serverLevel = (ServerLevel) this.level;
-                for (int i = 0; i < 10; ++i) {  // Adjust the loop count for fewer particles
-                    double d0 = this.getPosition().x + (this.level.random.nextDouble() - 0.5D) * (double)this.radius * 2.0D;
-                    double d1 = this.getPosition().y + (this.level.random.nextDouble() - 0.5D) * (double)this.radius * 2.0D;
-                    double d2 = this.getPosition().z + (this.level.random.nextDouble() - 0.5D) * (double)this.radius * 2.0D;
-                    serverLevel.sendParticles(ParticleTypes.EXPLOSION, d0, d1, d2, 1, 0.0D, 0.0D, 0.0D, 0.0D);
-                }
+                serverLevel.sendParticles(ModParticles.HOLY_EXPLOSION_PARTICLES.get(), this.x, this.y, this.z, 1, 0.0D, 0.0D, 0.0D, 0.0D);
             }
         }
     }

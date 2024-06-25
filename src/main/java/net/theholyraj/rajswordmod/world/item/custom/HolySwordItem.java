@@ -18,7 +18,7 @@ public class HolySwordItem extends SwordItem {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
-        HolyExplosion explosion = new HolyExplosion(pLevel,pPlayer,pPlayer.getBlockX(),pPlayer.getBlockY(),pPlayer.getBlockZ(),2f);
+        HolyExplosion explosion = new HolyExplosion(pLevel,pPlayer,pPlayer.position().x,pPlayer.position().y,pPlayer.position().z,2f);
         explosion.explode();
         explosion.finalizeExplosion(true);
         return InteractionResultHolder.success(pPlayer.getMainHandItem());
