@@ -4,6 +4,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SwordItem;
@@ -22,5 +23,13 @@ public class HolySwordItem extends SwordItem {
         explosion.explode();
         explosion.finalizeExplosion(true);
         return InteractionResultHolder.success(pPlayer.getMainHandItem());
+    }
+
+    @Override
+    public boolean hurtEnemy(ItemStack pStack, LivingEntity pTarget, LivingEntity pAttacker) {
+        if (pTarget.getMobType() == MobType.UNDEAD){
+
+        }
+        return super.hurtEnemy(pStack, pTarget, pAttacker);
     }
 }

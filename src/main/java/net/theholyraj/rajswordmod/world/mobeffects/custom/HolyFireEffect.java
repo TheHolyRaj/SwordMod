@@ -11,6 +11,7 @@ import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.theholyraj.rajswordmod.SwordMod;
+import net.theholyraj.rajswordmod.client.particle.ModParticles;
 import net.theholyraj.rajswordmod.world.config.ModCommonConfigs;
 
 @Mod.EventBusSubscriber(modid = SwordMod.MODID)
@@ -27,6 +28,21 @@ public class HolyFireEffect extends MobEffect {
         }
         pLivingEntity.hurt(pLivingEntity.level().damageSources().magic(), holyDamage);
 
+        if (pLivingEntity.level().isClientSide){
+            double minX = pLivingEntity.getBoundingBox().minX;
+            double minY = pLivingEntity.getBoundingBox().minY;
+            double minZ = pLivingEntity.getBoundingBox().minZ;
+            double maxX = pLivingEntity.getBoundingBox().maxX;
+            double maxY = pLivingEntity.getBoundingBox().maxY;
+            double maxZ = pLivingEntity.getBoundingBox().maxZ;
+            double x = minX + (maxX - minX) * pLivingEntity.getRandom().nextDouble();
+            double y = minY + (maxY - minY) * pLivingEntity.getRandom().nextDouble();
+            double z = minZ + (maxZ - minZ) * pLivingEntity.getRandom().nextDouble();
+            if (y < pLivingEntity.getBbHeight() /2 ){
+                y = pLivingEntity.getBbHeight()/2;
+            }
+            pLivingEntity.level().addParticle(ModParticles.HOLY_FIRE_PARTICLES.get(), x, y, z, 0.0, 0.0, 0.0);
+        }
         super.applyEffectTick(pLivingEntity, pAmplifier);
     }
 

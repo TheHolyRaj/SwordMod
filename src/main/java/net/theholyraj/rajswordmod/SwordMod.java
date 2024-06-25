@@ -23,6 +23,7 @@ import net.theholyraj.rajswordmod.client.item.ModItemProperties;
 import net.theholyraj.rajswordmod.client.particle.ModParticles;
 import net.theholyraj.rajswordmod.client.particle.custom.DeflectParticle;
 import net.theholyraj.rajswordmod.client.particle.custom.HolyExplosionParticle;
+import net.theholyraj.rajswordmod.client.particle.custom.HolyFireParticle;
 import net.theholyraj.rajswordmod.client.sound.ModSounds;
 import net.theholyraj.rajswordmod.network.ModMessages;
 import net.theholyraj.rajswordmod.world.config.ModCommonConfigs;
@@ -85,6 +86,8 @@ public class SwordMod {
                     DeflectParticle.Provider::new);
             Minecraft.getInstance().particleEngine.register(ModParticles.HOLY_EXPLOSION_PARTICLES.get(),
                     HolyExplosionParticle.Provider::new);
+            Minecraft.getInstance().particleEngine.register(ModParticles.HOLY_FIRE_PARTICLES.get(),
+                    HolyFireParticle.Provider::new);
         }
     }
 }
