@@ -8,6 +8,7 @@ import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
 import net.theholyraj.rajswordmod.SwordMod;
 import net.theholyraj.rajswordmod.network.packet.DeflectParticleS2CPacket;
+import net.theholyraj.rajswordmod.network.packet.HolyFireParticleS2CPacket;
 
 public class ModMessages {
     private static SimpleChannel INSTANCE;
@@ -29,6 +30,12 @@ public class ModMessages {
                 .decoder(DeflectParticleS2CPacket::new)
                 .encoder(DeflectParticleS2CPacket::toBytes)
                 .consumerMainThread(DeflectParticleS2CPacket::handle)
+                .add();
+
+        net.messageBuilder(HolyFireParticleS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(HolyFireParticleS2CPacket::new)
+                .encoder(HolyFireParticleS2CPacket::toBytes)
+                .consumerMainThread(HolyFireParticleS2CPacket::handle)
                 .add();
 
         INSTANCE = net;

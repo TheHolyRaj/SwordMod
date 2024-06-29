@@ -10,26 +10,54 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.client.extensions.IForgeBakedModel;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.theholyraj.rajswordmod.SwordMod;
 import net.theholyraj.rajswordmod.world.explosion.HolyExplosion;
+import net.theholyraj.rajswordmod.world.item.ModItems;
+import net.theholyraj.rajswordmod.world.item.util.HolySwordUtil;
 
+import java.util.Random;
+
+@Mod.EventBusSubscriber(modid = SwordMod.MODID)
 public class HolySwordItem extends SwordItem {
     public HolySwordItem(Tier pTier, int pAttackDamageModifier, float pAttackSpeedModifier, Properties pProperties) {
         super(pTier, pAttackDamageModifier, pAttackSpeedModifier, pProperties);
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
-        HolyExplosion explosion = new HolyExplosion(pLevel,pPlayer,pPlayer.position().x,pPlayer.position().y,pPlayer.position().z,2f);
-        explosion.explode();
-        explosion.finalizeExplosion(true);
-        return InteractionResultHolder.success(pPlayer.getMainHandItem());
-    }
-
-    @Override
     public boolean hurtEnemy(ItemStack pStack, LivingEntity pTarget, LivingEntity pAttacker) {
         if (pTarget.getMobType() == MobType.UNDEAD){
-
+            Random random = new Random();
+            double chance = HolySwordUtil.getPercentage(pStack)/100.0;
+            if (random.nextDouble()<= chance){
+                HolyExplosion explosion = new HolyExplosion(pAttacker.level(),pAttacker,pTarget.position().x,pTarget.position().y+pTarget.getBbHeight()/2,pTarget.position().z,2f);
+                explosion.explode();
+                explosion.finalizeExplosion(true);
+                HolySwordUtil.resetChance(pStack);
+            }
         }
         return super.hurtEnemy(pStack, pTarget, pAttacker);
     }
+
+
+    /////////////////////////////////////////////EVENT//////////////////////////////////////////
+    @SubscribeEvent
+    public static void doHolyExplosion(LivingDeathEvent event){
+        LivingEntity entity = event.getEntity();
+        if (!event.getSource().isIndirect()){
+            if (event.getSource().getEntity() != null && event.getSource().getEntity() instanceof Player player){
+                if (player.getMainHandItem().is(ModItems.HOLY_SWORD.get())){
+                    if (entity.getMobType() == MobType.UNDEAD){
+                        HolyExplosion explosion = new HolyExplosion(player.level(),player,entity.position().x,entity.position().y+entity.getBbHeight()/2,entity.position().z,2f);
+                        explosion.explode();
+                        explosion.finalizeExplosion(true);
+                    }
+                }
+            }
+        }
+    }
+
 }

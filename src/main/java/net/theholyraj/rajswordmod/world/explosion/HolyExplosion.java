@@ -168,13 +168,10 @@ public class HolyExplosion extends Explosion {
 
     @Override
     public void finalizeExplosion(boolean spawnParticles) {
-        if (this.level.isClientSide) {
-            this.level.playLocalSound(this.x, this.y, this.z, SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS, 4.0F, (1.0F + (this.level.random.nextFloat() - this.level.random.nextFloat()) * 0.2F) * 0.7F, false);
-        }
-
         if (spawnParticles) {
             if (this.level instanceof ServerLevel) {
                 ServerLevel serverLevel = (ServerLevel) this.level;
+                serverLevel.playSound(null,this.x, this.y, this.z,SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS, 4.0F, (1.0F + (this.level.random.nextFloat() - this.level.random.nextFloat())));
                 serverLevel.sendParticles(ModParticles.HOLY_EXPLOSION_PARTICLES.get(), this.x, this.y, this.z, 1, 0.0D, 0.0D, 0.0D, 0.0D);
             }
         }
