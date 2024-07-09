@@ -8,6 +8,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import net.theholyraj.rajswordmod.SwordMod;
 import net.theholyraj.rajswordmod.world.entity.custom.DashProjectileEntity;
+import net.theholyraj.rajswordmod.world.entity.custom.GaiaProjectileEntity;
 
 public class ModEntities {
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES =
@@ -20,6 +21,14 @@ public class ModEntities {
                             .clientTrackingRange(4)
                             .updateInterval(20)
                             .build("dash_projectile"));
+
+    public static final RegistryObject<EntityType<GaiaProjectileEntity>> GAIA_PROJECTILE =
+            ENTITY_TYPES.register("gaia_projectile",
+                    () -> EntityType.Builder.<GaiaProjectileEntity>of(GaiaProjectileEntity::new, MobCategory.MISC)
+                            .sized(2.5f, 0.3f)
+                            .clientTrackingRange(4)
+                            .updateInterval(20)
+                            .build("gaia_projectile"));
 
     public static void register(IEventBus eventBus) {
         ENTITY_TYPES.register(eventBus);
