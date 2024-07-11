@@ -1,11 +1,13 @@
 package net.theholyraj.rajswordmod.world.entity.custom;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffect;
@@ -23,35 +25,39 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.phys.EntityHitResult;
-import net.minecraft.world.phys.HitResult;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.phys.*;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.network.NetworkHooks;
 import net.theholyraj.rajswordmod.world.entity.ModEntities;
 import net.theholyraj.rajswordmod.world.item.custom.GaiaBladeItem;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class GaiaProjectileEntity extends Projectile {
     private static final EntityDataAccessor<Boolean> HIT =
             SynchedEntityData.defineId(GaiaProjectileEntity.class, EntityDataSerializers.BOOLEAN);
     private final float swordDamage;
     private final Map<Enchantment, Integer> swordEnchantments;
+    private final Level level;
+    private final Set<Entity> piercedEntities = new HashSet<>();
 
 
     public GaiaProjectileEntity(EntityType<? extends Projectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
         this.swordDamage = 0;
         this.swordEnchantments = new HashMap<>();
+        this.level = pLevel;
     }
     public GaiaProjectileEntity(Level pLevel, Player player, ItemStack sword) {
         super(ModEntities.GAIA_PROJECTILE.get(), pLevel);
         setOwner(player);
         this.swordEnchantments = EnchantmentHelper.getEnchantments(sword);
         this.swordDamage = ((GaiaBladeItem) sword.getItem()).getDamage()+1;
+        this.level=pLevel;
 
         Vec3 blockpos = player.position();
         double d0 = blockpos.x() ;
@@ -91,6 +97,21 @@ public class GaiaProjectileEntity extends Projectile {
         HitResult hitresult = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitEntity);
         if (hitresult.getType() != HitResult.Type.MISS && !ForgeEventFactory.onProjectileImpact(this, hitresult))
             this.onHit(hitresult);
+        if (this.level().getBlockStates(this.getBoundingBox()).noneMatch(BlockBehaviour.BlockStateBase::isAir) && !this.level().getBlockStates(this.getBoundingBox()).noneMatch(BlockBehaviour.BlockStateBase::isSolid) ) {
+            this.discard();
+        }
+
+        if (!this.level.isClientSide) {
+            AABB boundingBox = this.getBoundingBox().expandTowards(this.getDeltaMovement()).inflate(1.0D);
+            List<Entity> entities = this.level.getEntities(this, boundingBox, this::canHitEntity);
+
+            for (Entity entity : entities) {
+                if (!this.piercedEntities.contains(entity)) {
+                    this.onHitEntity(new EntityHitResult(entity));
+                }
+            }
+        }
+
 
         double d0 = this.getX() + vec3.x;
         double d1 = this.getY() + vec3.y;
@@ -105,7 +126,6 @@ public class GaiaProjectileEntity extends Projectile {
 
     @Override
     protected void onHitEntity(EntityHitResult hitResult) {
-        super.onHitEntity(hitResult);
         Entity hitEntity = hitResult.getEntity();
         Entity owner = this.getOwner();
         if(hitEntity == owner && this.level().isClientSide()) {
@@ -118,31 +138,49 @@ public class GaiaProjectileEntity extends Projectile {
             int sharpnessLevel = swordEnchantments.get(Enchantments.SHARPNESS);
             totalDamage += 0.5F * sharpnessLevel + 0.5F;
         }
-        LivingEntity livingentity = owner instanceof LivingEntity ? (LivingEntity)owner : null;
-        hitEntity.hurt(this.damageSources().mobProjectile(this, livingentity), totalDamage);
+        if (!this.piercedEntities.contains(hitEntity)) {
+            this.piercedEntities.add(hitEntity);
+            super.onHitEntity(hitResult);
+            LivingEntity livingentity = owner instanceof LivingEntity ? (LivingEntity)owner : null;
+            hitEntity.hurt(this.damageSources().mobProjectile(this, livingentity), totalDamage);        }
+
+    }
+
+    @Override
+    protected void onHitBlock(BlockHitResult pResult) {
+        BlockState blockState = this.level.getBlockState(pResult.getBlockPos());
+        if (blockState.getBlock() != Blocks.WATER) {
+            this.discard();
+        }
     }
 
     @Override
     protected void onHit(HitResult hitResult) {
-        super.onHit(hitResult);
-        if(this.level().isClientSide()) {
-            return;
-        }
-        if (hitResult.getType() == HitResult.Type.BLOCK){
-            if (this.tickCount <23){
-                this.tickCount = 22;
-            }
+        HitResult.Type hitresult$type = hitResult.getType();
+        if (hitresult$type == HitResult.Type.BLOCK) {
+            BlockHitResult blockhitresult = (BlockHitResult)hitResult;
+            this.onHitBlock(blockhitresult);
         }
 
-        if(hitResult.getType() == HitResult.Type.ENTITY && hitResult instanceof EntityHitResult entityHitResult) {
-            Entity hit = entityHitResult.getEntity();
-            Entity owner = this.getOwner();
-            if(owner != hit) {
-                this.entityData.set(HIT, true);
+    }
+    private void spawnParticles() {
+        if (this.level instanceof ServerLevel) {
+            ServerLevel serverLevel = (ServerLevel) this.level;
+            for (int i = 0; i < 25; ++i) {
+                double d0 = (this.random.nextDouble()) * this.getBbWidth();
+                double d1 = (this.random.nextDouble()) * this.getBbHeight();
+                double d2 = (this.random.nextDouble()) * this.getBbWidth();
+                serverLevel.sendParticles(ParticleTypes.HAPPY_VILLAGER, this.getX(), this.getY()+(this.random.nextDouble()), this.getZ(), 1, d0, d1, d2, 1.0D);
             }
-        } else {
-            this.entityData.set(HIT, true);
         }
+    }
+
+    @Override
+    public void remove(RemovalReason pReason) {
+        if (!this.level.isClientSide && pReason == RemovalReason.DISCARDED) {
+            spawnParticles();
+        }
+        super.remove(pReason);
     }
 
     @Override
