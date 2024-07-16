@@ -20,9 +20,7 @@ public class ModCommonConfigs {
     public static final ForgeConfigSpec.ConfigValue<Integer> HOLY_FIRE_DURATION;
     public static final ForgeConfigSpec.ConfigValue<Float> HOLY_EXPLOSION_CHANCE;
 
-
-
-
+    public static final ForgeConfigSpec.ConfigValue<Float> GAIA_BLADE_PROJECTILE_DAMAGE_PERCENTAGE;
 
 
 
@@ -44,8 +42,9 @@ public class ModCommonConfigs {
         HOLY_FIRE_DAMAGE = BUILDER.comment("What percentage of a mobs health should HolyFire deal (does this about once per 10 ticks in duration)?").define("Holy Fire Health Percentage",3);
         MIN_HOLY_FIRE_DAMAGE = BUILDER.comment("What is the minimum damage (not percent) should holyFire deal?").define("Holy Fire Min Damage",2);
         HOLY_FIRE_DURATION = BUILDER.comment("How Long (in Ticks) should Holy Fire Last").define("HolyFire Duration",50);
-        HOLY_EXPLOSION_CHANCE = BUILDER.comment("What is the Ramping Chance for a Holy Explosion to fire?").define("HolyExplosion Chance",2.5f);
+        HOLY_EXPLOSION_CHANCE = BUILDER.comment("What is the Ramping Chance for a Holy Explosion to fire?").define("HolyExplosion Chance, 2.5 = 2.5%",2.5f);
 
+        GAIA_BLADE_PROJECTILE_DAMAGE_PERCENTAGE = BUILDER.comment("What percent of the swords damage should the GaiaBlade Projectile deal?").define("GaiaProjectile Damage, 1=100%",1f);
 
 
         BUILDER.pop();

@@ -32,6 +32,7 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.*;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.network.NetworkHooks;
+import net.theholyraj.rajswordmod.world.config.ModCommonConfigs;
 import net.theholyraj.rajswordmod.world.entity.ModEntities;
 import net.theholyraj.rajswordmod.world.item.custom.GaiaBladeItem;
 
@@ -142,6 +143,7 @@ public class GaiaProjectileEntity extends Projectile {
             this.piercedEntities.add(hitEntity);
             super.onHitEntity(hitResult);
             LivingEntity livingentity = owner instanceof LivingEntity ? (LivingEntity)owner : null;
+            totalDamage=totalDamage* (ModCommonConfigs.GAIA_BLADE_PROJECTILE_DAMAGE_PERCENTAGE.get());
             hitEntity.hurt(this.damageSources().mobProjectile(this, livingentity), totalDamage);        }
 
     }

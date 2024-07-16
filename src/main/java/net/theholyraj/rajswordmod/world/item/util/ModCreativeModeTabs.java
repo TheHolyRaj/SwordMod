@@ -23,6 +23,7 @@ public class ModCreativeModeTabs {
                         output.accept(ModItems.KNOCKBACK_SWORD.get());
                         output.accept(ModItems.HOLY_SWORD.get());
                         output.accept(ModItems.GAIA_SWORD.get());
+                        output.accept(ModItems.BLOOD_SWORD.get());
 
                     }).build());
 

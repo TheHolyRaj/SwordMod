@@ -25,7 +25,7 @@ public class ModEntities {
     public static final RegistryObject<EntityType<GaiaProjectileEntity>> GAIA_PROJECTILE =
             ENTITY_TYPES.register("gaia_projectile",
                     () -> EntityType.Builder.<GaiaProjectileEntity>of(GaiaProjectileEntity::new, MobCategory.MISC)
-                            .sized(3.5f, 0.3f)
+                            .sized(2f, 0.3f)
                             .clientTrackingRange(4)
                             .updateInterval(20)
                             .build("gaia_projectile"));

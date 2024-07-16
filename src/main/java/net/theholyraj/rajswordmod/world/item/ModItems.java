@@ -25,6 +25,8 @@ public class ModItems {
             () -> new HolySwordItem(ModTiers.FABLED, 8-5,1.6f-4, new Item.Properties().fireResistant()));
     public static final RegistryObject<GaiaBladeItem> GAIA_SWORD = ITEMS.register("gaia_sword",
             () -> new GaiaBladeItem(ModTiers.FABLED, 10-5,1.2f-4, new Item.Properties().fireResistant()));
+    public static final RegistryObject<BloodSwordItem> BLOOD_SWORD = ITEMS.register("blood_sword",
+            () -> new BloodSwordItem(ModTiers.FABLED, 8-5,1.6f-4, new Item.Properties().fireResistant()));
 
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);
