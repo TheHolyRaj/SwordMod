@@ -8,6 +8,10 @@ import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.CapabilityToken;
+import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -29,8 +33,10 @@ import net.theholyraj.rajswordmod.client.sound.ModSounds;
 import net.theholyraj.rajswordmod.network.ModMessages;
 import net.theholyraj.rajswordmod.world.config.ModCommonConfigs;
 import net.theholyraj.rajswordmod.world.entity.ModEntities;
+import net.theholyraj.rajswordmod.world.item.util.ModCapabilities;
 import net.theholyraj.rajswordmod.world.item.util.ModCreativeModeTabs;
 import net.theholyraj.rajswordmod.world.item.ModItems;
+import net.theholyraj.rajswordmod.world.item.util.bloodsword.IBloodSwordData;
 import net.theholyraj.rajswordmod.world.mobeffects.ModMobEffects;
 import org.slf4j.Logger;
 
@@ -72,6 +78,10 @@ public class SwordMod {
 
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event){
+    }
+    @SubscribeEvent
+    public static void onRegisterCapabilities(RegisterCapabilitiesEvent event) {
+        ModCapabilities.registerCapabilities(event);
     }
 
     @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)

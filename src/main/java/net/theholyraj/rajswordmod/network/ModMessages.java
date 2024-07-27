@@ -7,11 +7,12 @@ import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
 import net.theholyraj.rajswordmod.SwordMod;
+import net.theholyraj.rajswordmod.network.packet.BloodDataS2CPacket;
 import net.theholyraj.rajswordmod.network.packet.DeflectParticleS2CPacket;
 import net.theholyraj.rajswordmod.network.packet.HolyFireParticleS2CPacket;
 
 public class ModMessages {
-    private static SimpleChannel INSTANCE;
+    public static SimpleChannel INSTANCE;
 
     private static int packetId = 0;
     private static int id() {
@@ -36,6 +37,12 @@ public class ModMessages {
                 .decoder(HolyFireParticleS2CPacket::new)
                 .encoder(HolyFireParticleS2CPacket::toBytes)
                 .consumerMainThread(HolyFireParticleS2CPacket::handle)
+                .add();
+
+        net.messageBuilder(BloodDataS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(BloodDataS2CPacket::new)
+                .encoder(BloodDataS2CPacket::toBytes)
+                .consumerMainThread(BloodDataS2CPacket::handle)
                 .add();
 
         INSTANCE = net;

@@ -1,4 +1,4 @@
-package net.theholyraj.rajswordmod.world.item.util;
+package net.theholyraj.rajswordmod.world.item.util.holysword;
 
 import net.minecraft.world.item.ItemStack;
 import net.theholyraj.rajswordmod.world.config.ModCommonConfigs;

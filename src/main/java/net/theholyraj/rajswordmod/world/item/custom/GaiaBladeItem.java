@@ -29,6 +29,7 @@ public class GaiaBladeItem extends SwordItem {
                 level.addFreshEntity(projectile);
                 level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.METAL_BREAK, SoundSource.NEUTRAL,
                         1F, 1.5F);
+                pStack.setDamageValue(5);
             }
         }
 
@@ -47,6 +48,7 @@ public class GaiaBladeItem extends SwordItem {
                 level.addFreshEntity(projectile);
                 level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.METAL_BREAK, SoundSource.NEUTRAL,
                         1F, 1.5F);
+                stack.setDamageValue(5);
             }
         }
 
