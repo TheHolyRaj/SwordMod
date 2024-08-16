@@ -10,6 +10,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import net.theholyraj.rajswordmod.SwordMod;
 import net.theholyraj.rajswordmod.world.item.custom.DeflectSwordItem;
+import net.theholyraj.rajswordmod.world.mobeffects.custom.AntiArmorEffect;
 import net.theholyraj.rajswordmod.world.mobeffects.custom.HolyFireEffect;
 
 public class ModMobEffects {
@@ -18,6 +19,9 @@ public class ModMobEffects {
 
     public static final RegistryObject<HolyFireEffect>HOLY_FIRE = EFFECTS.register("holy_fire",
             ()-> new HolyFireEffect(MobEffectCategory.HARMFUL,1));
+
+    public static final RegistryObject<AntiArmorEffect>ANTI_ARMOR = EFFECTS.register("anti_armor",
+            ()-> new AntiArmorEffect(MobEffectCategory.HARMFUL,2));
 
     public static void register(IEventBus eventBus) {
         EFFECTS.register(eventBus);

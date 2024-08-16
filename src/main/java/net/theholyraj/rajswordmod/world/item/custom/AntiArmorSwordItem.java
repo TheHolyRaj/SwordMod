@@ -5,6 +5,8 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -17,6 +19,7 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.theholyraj.rajswordmod.world.mobeffects.ModMobEffects;
 
 import java.util.List;
 import java.util.Random;
@@ -41,21 +44,24 @@ public class AntiArmorSwordItem extends SwordItem {
         Vec3 movementVector = new Vec3(viewVector.x/2, -0.5, viewVector.z/2);
         Vec3 movementVectorCheck = new Vec3(viewVector.x/2, 0.5, viewVector.z/2);
 
-
-        // Get the bounding box of the entity
         AABB boundingBox = pLivingEntity.getBoundingBox();
 
-        // Create an expanded bounding box in the direction of movement
         AABB expandedBox = boundingBox.expandTowards(movementVectorCheck);
 
-        // Check if any block in the expanded box collides
+
+        for (LivingEntity entity : pLevel.getEntitiesOfClass(LivingEntity.class, expandedBox)) {
+            if (entity != pLivingEntity && entity.isAlive()) {
+                pLivingEntity.stopUsingItem();
+                if (!pLevel.isClientSide()){
+                    entity.setDeltaMovement(new Vec3(viewVector.x,+0.5,viewVector.z));
+                }
+                return;
+            }
+        }
         if (!pLevel.noCollision(expandedBox)) {
-            System.out.println("yes");
-            // Apply upward velocity to simulate a jump
             pLivingEntity.setDeltaMovement(pLivingEntity.getDeltaMovement().add(0, 0.8, 0));
         }
         else {
-            // Apply the movement vector
             pLivingEntity.setDeltaMovement(movementVector.scale(1+time));
         }
 
@@ -65,14 +71,18 @@ public class AntiArmorSwordItem extends SwordItem {
     @Override
     public void onStopUsing(ItemStack stack, LivingEntity entity, int count) {
         if (entity instanceof Player player){
-            attack(player.level(),player,1,stack);
+            attack(player.level(),player,stack);
             player.setDeltaMovement(new Vec3(0,0,0));
             player.getCooldowns().addCooldown(this,20);
         }
         super.onStopUsing(stack, entity, count);
     }
+    public void applyArmorReductionEffect(LivingEntity target, int amplifier) {
+        // Apply the custom armor reduction effect with a specific amplifier
+        target.addEffect(new MobEffectInstance(ModMobEffects.ANTI_ARMOR.get(), 200, amplifier));
+    }
 
-    public void attack(Level pLevel, LivingEntity pLivingEntity, int charge, ItemStack stack) {
+    public void attack(Level pLevel, LivingEntity pLivingEntity, ItemStack stack) {
         Vec3 rightVector;
         Vec3 upVector;
         Vec3 viewVector;
@@ -103,7 +113,7 @@ public class AntiArmorSwordItem extends SwordItem {
         Vec3 leftVector = rightVector.scale(-1);
 
         // Calculate the half dimensions to determine offsets
-        double length = 2.25;
+        double length = 2;
         double halfLength = length / 2.0;
         double width = 1.5;
         double halfWidth = width / 2.0;
@@ -152,23 +162,41 @@ public class AntiArmorSwordItem extends SwordItem {
 
         for (Entity entity : list1) {
             if (!pLevel.isClientSide){
-                entity.hurt(pLevel.damageSources().playerAttack((Player) pLivingEntity), 6);
+                if (entity instanceof LivingEntity livingEntity){
+                    livingEntity.hurt(pLevel.damageSources().playerAttack((Player) pLivingEntity), 6);
+                    applyArmorReductionEffect(livingEntity
+                            ,getEffectAmplifier(livingEntity,ModMobEffects.ANTI_ARMOR.get())+1);//increases the level of the effect
+                }
             }
         }
         for (Entity entity : list2) {
             if (!pLevel.isClientSide) {
-                entity.hurt(pLevel.damageSources().playerAttack((Player) pLivingEntity), 6);
-                stack.setDamageValue(4*charge);
+                if (entity instanceof LivingEntity livingEntity){
+                    livingEntity.hurt(pLevel.damageSources().playerAttack((Player) pLivingEntity), 6);
+                    applyArmorReductionEffect(livingEntity
+                            ,getEffectAmplifier(livingEntity,ModMobEffects.ANTI_ARMOR.get())+1);//increases the level of the effect
+                }
             }
 
         }
         for (Entity entity : list3) {
             if (!pLevel.isClientSide){
-                entity.hurt(pLevel.damageSources().playerAttack((Player) pLivingEntity), 6);
-
+                if (entity instanceof LivingEntity livingEntity){
+                    livingEntity.hurt(pLevel.damageSources().playerAttack((Player) pLivingEntity), 6);
+                    applyArmorReductionEffect(livingEntity
+                            ,getEffectAmplifier(livingEntity,ModMobEffects.ANTI_ARMOR.get())+1);//increases the level of the effect
+                }
             }
         }
 
+    }
+
+    public int getEffectAmplifier(LivingEntity entity, MobEffect effect) {
+        MobEffectInstance effectInstance = entity.getEffect(effect);
+        if (effectInstance != null) {
+            return Math.min(effectInstance.getAmplifier(), 4);
+        }
+        return 0;
     }
 
     AABB createAABBFromCorners(Vec3[] corners) {
