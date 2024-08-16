@@ -31,8 +31,8 @@ public class ModCommonConfigs {
 
         ARROW_RENDER_COOLDOWN = BUILDER.comment("How long ArrowRender should go on cooldown").define("ArrowRender Cooldown", 100);
 
-        SENTINEL_SWORD_CHARGE_TIME = BUILDER.comment("How long (in ticks) should SentinelSword charge!")
-                .define("SentinelSword Charge Time", 20);
+        SENTINEL_SWORD_CHARGE_TIME = BUILDER.comment("How long (in ticks) should SentinelSword be used for!")
+                .define("SentinelSword Charge Time", 10);
         SENTINEL_SWORD_COOLDOWN = BUILDER.comment("How long SentinelSword should go on cooldown").define("SentinelSword Cooldown", 100);
 
 

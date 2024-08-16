@@ -24,6 +24,7 @@ public class ModCreativeModeTabs {
                         output.accept(ModItems.HOLY_SWORD.get());
                         output.accept(ModItems.GAIA_SWORD.get());
                         output.accept(ModItems.BLOOD_SWORD.get());
+                        output.accept(ModItems.ANTI_ARMOR_SWORD.get());
 
                     }).build());
 
