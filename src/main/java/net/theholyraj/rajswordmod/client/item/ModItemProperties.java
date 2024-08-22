@@ -13,6 +13,8 @@ public class ModItemProperties {
         makeBlockingItem(ModItems.DEFLECT_SWORD.get());
         makeBlockingItem(ModItems.SENTINEL_SWORD.get());
         makeBlockingItem(ModItems.KNOCKBACK_SWORD.get());
+        makeBlockingItem(ModItems.ANTI_ARMOR_SWORD.get());
+
 
         registerCustomProperty(ModItems.BLOOD_SWORD.get());
     }

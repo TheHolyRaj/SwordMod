@@ -33,7 +33,6 @@ public class BloodDataS2CPacket {
         context.enqueueWork(() -> {
             Player player = Minecraft.getInstance().player;
             if (player != null) {
-                System.out.println("yes");
                 ItemStack stack = player.getInventory().getItem(slotIndex);
                 stack.getCapability(ModCapabilities.BLOOD_DATA_CAPABILITY).ifPresent(customData -> {
                     customData.setData(this.customData);

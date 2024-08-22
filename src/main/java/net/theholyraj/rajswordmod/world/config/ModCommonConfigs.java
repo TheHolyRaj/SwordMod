@@ -22,6 +22,14 @@ public class ModCommonConfigs {
 
     public static final ForgeConfigSpec.ConfigValue<Float> GAIA_BLADE_PROJECTILE_DAMAGE_PERCENTAGE;
 
+    public static final ForgeConfigSpec.ConfigValue<Integer> ANTI_ARMOR_EFFECT_DURATION;
+    public static final ForgeConfigSpec.ConfigValue<Integer> ANTI_ARMOR_CHARGE_DURATION;
+    public static final ForgeConfigSpec.ConfigValue<Integer> ANTI_ARMOR_CHARGE_COOLDOWN;
+    public static final ForgeConfigSpec.ConfigValue<Integer> ANTI_ARMOR_CHARGE_DAMAGE;
+
+
+
+
 
 
 
@@ -46,6 +54,10 @@ public class ModCommonConfigs {
 
         GAIA_BLADE_PROJECTILE_DAMAGE_PERCENTAGE = BUILDER.comment("What percent of the swords damage should the GaiaBlade Projectile deal?").define("GaiaProjectile Damage, 1=100%",0.5f);
 
+        ANTI_ARMOR_EFFECT_DURATION = BUILDER.comment("How long (in ticks) should the anti armor effect last . Should be longer than the ArmorPiercer cooldown").define("AntiArmor Effect duration",250);
+        ANTI_ARMOR_CHARGE_DURATION = BUILDER.comment("How long (in ticks) should the player be avle to charge ArmorPiercer").define("ArmorPiercer Charge Duration", 100);
+        ANTI_ARMOR_CHARGE_COOLDOWN = BUILDER.comment().define("How long (in ticks) should ArmorPiercer go on cooldown",200);
+        ANTI_ARMOR_CHARGE_DAMAGE = BUILDER.comment("How much damage should ArmorPiercer's charge do?").define("ArmorPiercer charge damage",8);
 
         BUILDER.pop();
         SPEC = BUILDER.build();

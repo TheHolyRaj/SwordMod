@@ -2,5 +2,13 @@
   "parent": "minecraft:item/handheld",
   "textures": {
     "layer0": "rajswordmod:item/anti_armor_sword"
-  }
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "blocking": 1
+      },
+      "model": "rajswordmod:item/anti_armor_blocking"
+    }
+  ]
 }

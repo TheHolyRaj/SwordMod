@@ -21,7 +21,7 @@ public class ModMobEffects {
             ()-> new HolyFireEffect(MobEffectCategory.HARMFUL,1));
 
     public static final RegistryObject<AntiArmorEffect>ANTI_ARMOR = EFFECTS.register("anti_armor",
-            ()-> new AntiArmorEffect(MobEffectCategory.HARMFUL,2));
+            ()-> new AntiArmorEffect(MobEffectCategory.HARMFUL,16777215));
 
     public static void register(IEventBus eventBus) {
         EFFECTS.register(eventBus);

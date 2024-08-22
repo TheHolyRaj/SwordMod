@@ -22,6 +22,10 @@ public class ModParticles {
 
     public static final RegistryObject<SimpleParticleType> HOLY_FIRE_PARTICLES =
             PARTICLE_TYPES.register("holy_fire_particles", () -> new SimpleParticleType(true));
+
+    public static final RegistryObject<SimpleParticleType> ANTI_ARMOR_PARTICLES =
+            PARTICLE_TYPES.register("anti_armor_particles", () -> new SimpleParticleType(true));
+
     public static void register(IEventBus eventBus) {
         PARTICLE_TYPES.register(eventBus);
     }

@@ -45,7 +45,6 @@ public class AntiArmorEffect extends MobEffect {
                     reductionAmount,
                     AttributeModifier.Operation.MULTIPLY_TOTAL));
         }
-        System.out.println(pLivingEntity.getArmorValue());
 
         super.applyEffectTick(pLivingEntity, pAmplifier);
     }

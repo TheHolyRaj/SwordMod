@@ -4,13 +4,9 @@ import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
@@ -26,6 +22,7 @@ import net.theholyraj.rajswordmod.client.entity.DashProjectileRenderer;
 import net.theholyraj.rajswordmod.client.entity.GaiaProjectileRenderer;
 import net.theholyraj.rajswordmod.client.item.ModItemProperties;
 import net.theholyraj.rajswordmod.client.particle.ModParticles;
+import net.theholyraj.rajswordmod.client.particle.custom.AntiArmorParticle;
 import net.theholyraj.rajswordmod.client.particle.custom.DeflectParticle;
 import net.theholyraj.rajswordmod.client.particle.custom.HolyExplosionParticle;
 import net.theholyraj.rajswordmod.client.particle.custom.HolyFireParticle;
@@ -36,7 +33,6 @@ import net.theholyraj.rajswordmod.world.entity.ModEntities;
 import net.theholyraj.rajswordmod.world.item.util.ModCapabilities;
 import net.theholyraj.rajswordmod.world.item.util.ModCreativeModeTabs;
 import net.theholyraj.rajswordmod.world.item.ModItems;
-import net.theholyraj.rajswordmod.world.item.util.bloodsword.IBloodSwordData;
 import net.theholyraj.rajswordmod.world.mobeffects.ModMobEffects;
 import org.slf4j.Logger;
 
@@ -68,9 +64,7 @@ public class SwordMod {
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
-        event.enqueueWork(() -> {
-            ModMessages.register();
-        });
+        event.enqueueWork(ModMessages::register);
     }
 
     private void addCreative(BuildCreativeModeTabContentsEvent event) {
@@ -101,6 +95,9 @@ public class SwordMod {
                     HolyExplosionParticle.Provider::new);
             Minecraft.getInstance().particleEngine.register(ModParticles.HOLY_FIRE_PARTICLES.get(),
                     HolyFireParticle.Provider::new);
+            Minecraft.getInstance().particleEngine.register(ModParticles.ANTI_ARMOR_PARTICLES.get(),
+                    AntiArmorParticle.Provider::new);
+
         }
     }
 }
