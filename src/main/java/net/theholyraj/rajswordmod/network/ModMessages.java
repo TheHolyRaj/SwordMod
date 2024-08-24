@@ -39,11 +39,11 @@ public class ModMessages {
                 .consumerMainThread(HolyFireParticleS2CPacket::handle)
                 .add();
 
-        net.messageBuilder(BloodDataS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
-                .decoder(BloodDataS2CPacket::new)
-                .encoder(BloodDataS2CPacket::toBytes)
-                .consumerMainThread(BloodDataS2CPacket::handle)
-                .add();
+      //  net.messageBuilder(BloodDataS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+      //          .decoder(BloodDataS2CPacket::new)
+      //          .encoder(BloodDataS2CPacket::toBytes)
+     //           .consumerMainThread(BloodDataS2CPacket::handle)
+     //           .add();
 
         INSTANCE = net;
     }

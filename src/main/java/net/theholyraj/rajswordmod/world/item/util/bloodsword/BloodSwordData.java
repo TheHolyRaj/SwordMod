@@ -3,24 +3,24 @@ package net.theholyraj.rajswordmod.world.item.util.bloodsword;
 import net.minecraft.nbt.CompoundTag;
 
 public class BloodSwordData implements IBloodSwordData {
-    private int data;
+    private float data;
 
     @Override
-    public void setData(int data) {
+    public void setData(float data) {
         this.data = data;
     }
 
     @Override
-    public int getData() {
+    public float getData() {
         return data;
     }
 
     public void readFromNBT(CompoundTag nbt) {
-        data = nbt.getInt("data");
+        data = nbt.getFloat("data");
     }
 
     public void writeToNBT(CompoundTag nbt) {
-        nbt.putInt("data", data);
+        nbt.putFloat("data", data);
     }
 }
 

@@ -130,9 +130,9 @@ public class AntiArmorSwordItem extends SwordItem {
         // Calculate the half dimensions to determine offsets
         double length = 2;
         double halfLength = length / 2.0;
-        double width = 1.5;
+        double width = 2;
         double halfWidth = width / 2.0;
-        double height = 1.5;
+        double height = 2;
         double halfHeight = height / 2.0;
 
         // Adjust the position to place the nearest face of the cuboid in front of the player
@@ -210,14 +210,14 @@ public class AntiArmorSwordItem extends SwordItem {
         }
         stack.setDamageValue(5);
         if (check){
-            pLevel.playSound(pLivingEntity,pLivingEntity.blockPosition(),SoundEvents.SHIELD_BREAK,SoundSource.PLAYERS,0.5f,0.8f);
+            pLevel.playSound(pLivingEntity,pLivingEntity.blockPosition(),SoundEvents.SHIELD_BREAK,SoundSource.PLAYERS,0.7f,1.3f);
         }
     }
 
     public int getEffectAmplifier(LivingEntity entity, MobEffect effect) {
         MobEffectInstance effectInstance = entity.getEffect(effect);
         if (effectInstance != null) {
-            return Math.min(effectInstance.getAmplifier(), 2);
+            return Math.min(effectInstance.getAmplifier(), 1);
         }
         return 0;
     }

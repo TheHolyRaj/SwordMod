@@ -7,6 +7,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.phys.AABB;
+import net.theholyraj.rajswordmod.world.config.ModCommonConfigs;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
@@ -26,7 +27,7 @@ public class AntiArmorEffect extends MobEffect {
         if (pLivingEntity.getAttribute(Attributes.ARMOR) != null) {
             pLivingEntity.getAttribute(Attributes.ARMOR).removeModifier(ARMOR_REDUCTION_UUID);
 
-            double reductionAmount = -0.1 * (pAmplifier + 1); // Each level reduces 10% more
+            double reductionAmount = -ModCommonConfigs.ANTI_ARMOR_EFFECT_REDUCTION.get() * (pAmplifier + 1); // Each level reduces 10% more
 
             pLivingEntity.getAttribute(Attributes.ARMOR).addTransientModifier(new AttributeModifier(
                     ARMOR_REDUCTION_UUID,

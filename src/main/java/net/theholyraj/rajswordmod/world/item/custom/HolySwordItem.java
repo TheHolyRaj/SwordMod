@@ -33,7 +33,6 @@ public class HolySwordItem extends SwordItem {
         if (pTarget.getMobType() == MobType.UNDEAD){
             Random random = new Random();
             float chance = getCustomData(pStack);
-            System.out.println(chance);
             if (random.nextFloat(0,100)<= chance){
                 HolyExplosion explosion = new HolyExplosion(pAttacker.level(),pAttacker,pTarget.position().x,pTarget.position().y+pTarget.getBbHeight()/2,pTarget.position().z,2f);
                 explosion.explode();
