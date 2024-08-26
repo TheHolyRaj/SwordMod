@@ -28,6 +28,8 @@ public class ModItems {
             () -> new BloodGorgerSwordItem(ModTiers.FABLED, 8-5,1.6f-4, new Item.Properties().fireResistant()));
     public static final RegistryObject<AntiArmorSwordItem> ANTI_ARMOR_SWORD = ITEMS.register("anti_armor_sword",
             () -> new AntiArmorSwordItem(ModTiers.FABLED, 8-5,1.6f-4, new Item.Properties().fireResistant()));
+    public static final RegistryObject<ShadowCloneSwordItem> SHADOW_CLONE_SWORD = ITEMS.register("shadow_clone_sword",
+            () -> new ShadowCloneSwordItem(ModTiers.FABLED, 6-5,2f-4, new Item.Properties().fireResistant()));
 
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);

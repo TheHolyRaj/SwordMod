@@ -18,6 +18,7 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.theholyraj.rajswordmod.client.entity.CloneEntityRenderer;
 import net.theholyraj.rajswordmod.client.entity.DashProjectileRenderer;
 import net.theholyraj.rajswordmod.client.entity.GaiaProjectileRenderer;
 import net.theholyraj.rajswordmod.client.item.ModItemProperties;
@@ -84,6 +85,7 @@ public class SwordMod {
         public static void onClientSetup(FMLClientSetupEvent event) {
             EntityRenderers.register(ModEntities.DASH_PROJECTILE.get(), DashProjectileRenderer::new);
             EntityRenderers.register(ModEntities.GAIA_PROJECTILE.get(), GaiaProjectileRenderer::new);
+            EntityRenderers.register(ModEntities.CLONE_ENTITY.get(), CloneEntityRenderer::new);
 
             ModItemProperties.makeProperties();
         }

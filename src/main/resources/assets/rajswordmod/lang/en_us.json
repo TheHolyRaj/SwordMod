@@ -6,8 +6,9 @@
   "item.rajswordmod.gaia_sword": "Gaia Blade",
   "item.rajswordmod.blood_sword": "Blood Gorger",
   "item.rajswordmod.anti_armor_sword": "Armor Piercer",
+  "item.rajswordmod.shadow_clone_sword": "Rename Me",
 
   "effect.rajswordmod.anti_armor_effect": "Anti-Armor. Reduces armor and armor toughness",
 
-  "creativetab.sword_tab": "Renowned Blades"
+  "creativetab.sword_tab": "The Eight Renowned Blades"
 }

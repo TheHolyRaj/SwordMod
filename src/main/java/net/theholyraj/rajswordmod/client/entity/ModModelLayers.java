@@ -9,4 +9,8 @@ public class ModModelLayers {
             new ResourceLocation(SwordMod.MODID, "dash_projectile_layer"), "dash_projectile_layer");
     public static final ModelLayerLocation GAIA_PROJECTILE_LAYER = new ModelLayerLocation(
             new ResourceLocation(SwordMod.MODID, "gaia_projectile_layer"), "gaia_projectile_layer");
+
+    public static final ModelLayerLocation CLONE_ENTITY_LAYER = new ModelLayerLocation(
+            new ResourceLocation(SwordMod.MODID, "clone_entity_layer"), "clone_entity_layer");
+
 }
