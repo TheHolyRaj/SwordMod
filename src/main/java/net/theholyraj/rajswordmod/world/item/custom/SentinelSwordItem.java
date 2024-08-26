@@ -2,6 +2,7 @@ package net.theholyraj.rajswordmod.world.item.custom;
 
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -12,10 +13,7 @@ import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.SwordItem;
-import net.minecraft.world.item.Tier;
-import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.extensions.IForgeBakedModel;
@@ -28,7 +26,9 @@ import net.theholyraj.rajswordmod.SwordMod;
 import net.theholyraj.rajswordmod.client.sound.ModSounds;
 import net.theholyraj.rajswordmod.world.config.ModCommonConfigs;
 import net.theholyraj.rajswordmod.world.item.ModItems;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Random;
 
 @Mod.EventBusSubscriber(modid = SwordMod.MODID)
@@ -76,6 +76,11 @@ public class SentinelSwordItem extends SwordItem {
     @Override
     public UseAnim getUseAnimation(ItemStack pStack) {
         return UseAnim.BLOCK;
+    }
+
+    @Override
+    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
+        pTooltipComponents.add(Component.translatable("rajswordmod.hovertext.sentinel_sword"));
     }
     //////////////////////////////////////////EVENT//////////////////////////////////////////////////////
 

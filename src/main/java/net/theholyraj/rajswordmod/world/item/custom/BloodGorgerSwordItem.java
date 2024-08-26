@@ -2,14 +2,12 @@ package net.theholyraj.rajswordmod.world.item.custom;
 
 import net.minecraft.client.renderer.EffectInstance;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.SwordItem;
-import net.minecraft.world.item.Tier;
-import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.IForgeBakedModel;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -28,6 +26,7 @@ import net.theholyraj.rajswordmod.world.item.util.holysword.HolyCapabilityProvid
 import net.theholyraj.rajswordmod.world.item.util.holysword.IHolySwordData;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 @Mod.EventBusSubscriber(modid = SwordMod.MODID)
 public class BloodGorgerSwordItem extends SwordItem {
@@ -115,6 +114,10 @@ public class BloodGorgerSwordItem extends SwordItem {
         return UseAnim.DRINK;
     }
 
+    @Override
+    public void appendHoverText(ItemStack pStack, @org.jetbrains.annotations.Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
+        pTooltipComponents.add(Component.translatable("rajswordmod.hovertext.blood_sword"));
+    }
 
     //////////////////////////////////////////EVENT////////////////////////////////////////////////////////////
 

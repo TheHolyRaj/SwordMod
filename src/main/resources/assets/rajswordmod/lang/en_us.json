@@ -1,14 +1,25 @@
 {
-  "item.rajswordmod.deflect_sword": "Arrow Render",
-  "item.rajswordmod.sentinel_sword": "Sentinel Sword",
-  "item.rajswordmod.knockback_sword": "Leg Breaker",
-  "item.rajswordmod.holy_sword": "Light Bringer",
-  "item.rajswordmod.gaia_sword": "Gaia Blade",
-  "item.rajswordmod.blood_sword": "Blood Gorger",
+  "item.rajswordmod.deflect_sword": "§5Arrow Render",
+  "item.rajswordmod.sentinel_sword": "§cSentinel Sword",
+  "item.rajswordmod.knockback_sword": "§9Leg Breaker",
+  "item.rajswordmod.holy_sword": "§eLight Bringer",
+  "item.rajswordmod.gaia_sword": "§aGaia Blade",
+  "item.rajswordmod.blood_sword": "§4Blood Gorger",
   "item.rajswordmod.anti_armor_sword": "Armor Piercer",
-  "item.rajswordmod.shadow_clone_sword": "Dark Deceiver",
+  "item.rajswordmod.shadow_clone_sword": "§8Dark Deceiver",
 
   "effect.rajswordmod.anti_armor_effect": "Anti-Armor. Reduces armor and armor toughness",
 
-  "creativetab.sword_tab": "The Eight Renowned Blades"
+  "creativetab.sword_tab": "The Eight Renowned Blades",
+
+  "rajswordmod.hovertext.anti_armor_sword": "§oHold right click to Charge forward with ramping speed. When the attack ends, hits enemies and applies a stacking armor debuff",
+  "rajswordmod.hovertext.deflect_sword": "§5§oHold right click to enter a defensive stance, destroying all projectiles nearby. Release without SHIFT to dash forward",
+  "rajswordmod.hovertext.sentinel_sword": "§c§oHold right click to enter a defensive stance, becoming invincible and unmovable for a short time ",
+  "rajswordmod.hovertext.knockback_sword": "§9§oHold right click to charge up attack. When released, launches enemies in front of you away. Increased by knockback ",
+  "rajswordmod.hovertext.holy_sword": "§e§oOn hit againt undead, has a small chance to cause a holy explosion that damages the undead. Kills always cause an explosion ",
+  "rajswordmod.hovertext.gaia_sword": "§a§oFull swings fire a wave that pierces mobs. Damage increased by Sharpness",
+  "rajswordmod.hovertext.blood_sword": "§4§oHits store health in the blade. Hold rightclick to absorb the stolen health",
+  "rajswordmod.hovertext.shadow_clone_sword": "§8§oRight click to summon a clone of youself that takes Enemy Aggro and grants you invisibility"
+
+
 }

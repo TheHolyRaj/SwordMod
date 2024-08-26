@@ -15,10 +15,7 @@ import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.SwordItem;
-import net.minecraft.world.item.Tier;
-import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -31,6 +28,7 @@ import net.theholyraj.rajswordmod.client.particle.ModParticles;
 import net.theholyraj.rajswordmod.client.sound.ModSounds;
 import net.theholyraj.rajswordmod.client.sound.custom.ChargeTickableSound;
 import net.theholyraj.rajswordmod.world.config.ModCommonConfigs;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -302,5 +300,10 @@ public class KnockbackSwordItem extends SwordItem {
     @Override
     public UseAnim getUseAnimation(ItemStack pStack) {
         return UseAnim.BLOCK;
+    }
+
+    @Override
+    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
+        pTooltipComponents.add(Component.translatable("rajswordmod.hovertext.knockback_sword"));
     }
 }

@@ -1,12 +1,15 @@
 package net.theholyraj.rajswordmod.world.item.custom;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.Tier;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -20,6 +23,7 @@ import net.theholyraj.rajswordmod.world.item.util.holysword.HolyCapabilityProvid
 import net.theholyraj.rajswordmod.world.item.util.holysword.IHolySwordData;
 
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Random;
 
 @Mod.EventBusSubscriber(modid = SwordMod.MODID)
@@ -85,6 +89,10 @@ public class HolySwordItem extends SwordItem {
                 cap.readFromNBT(nbt.getCompound("holy_data"));
             });
         }
+    }
+    @Override
+    public void appendHoverText(ItemStack pStack, @org.jetbrains.annotations.Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
+        pTooltipComponents.add(Component.translatable("rajswordmod.hovertext.holy_sword"));
     }
 
 

@@ -5,6 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -35,6 +36,7 @@ import net.theholyraj.rajswordmod.network.packet.DeflectParticleS2CPacket;
 import net.theholyraj.rajswordmod.world.config.ModCommonConfigs;
 import net.theholyraj.rajswordmod.world.entity.custom.DashProjectileEntity;
 import net.theholyraj.rajswordmod.world.item.ModItems;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Comparator;
 import java.util.List;
@@ -104,6 +106,11 @@ public class DeflectSwordItem extends SwordItem {
                 }
             }
         }
+    }
+
+    @Override
+    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
+        pTooltipComponents.add(Component.translatable("rajswordmod.hovertext.deflect_sword"));
     }
     //////////////////////////////////////////EVENT//////////////////////////////////////////////////////
     @SubscribeEvent
