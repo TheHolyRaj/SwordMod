@@ -208,9 +208,9 @@ public class KnockbackSwordItem extends SwordItem {
             launchY = 0.5;
         }else launchY = viewVector.y;
 
-        Vec3 launchCode =new Vec3(viewVector.x *(charge + (double)EnchantmentHelper.getEnchantmentLevel(Enchantments.KNOCKBACK,pLivingEntity)/2)
-                ,launchY *(charge + (double)EnchantmentHelper.getEnchantmentLevel(Enchantments.KNOCKBACK,pLivingEntity)/2)
-                , viewVector.z *(charge + (double)EnchantmentHelper.getEnchantmentLevel(Enchantments.KNOCKBACK,pLivingEntity)/2));
+        Vec3 launchCode =new Vec3(viewVector.x *(charge+ 1 + (double)EnchantmentHelper.getEnchantmentLevel(Enchantments.KNOCKBACK,pLivingEntity)/2)
+                ,launchY *(charge+ 1  + (double)EnchantmentHelper.getEnchantmentLevel(Enchantments.KNOCKBACK,pLivingEntity)/2)
+                , viewVector.z *(charge+ 1  + (double)EnchantmentHelper.getEnchantmentLevel(Enchantments.KNOCKBACK,pLivingEntity)/2));
 
         boolean soundFlag = false;
 

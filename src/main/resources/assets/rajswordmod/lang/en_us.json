@@ -16,10 +16,10 @@
   "rajswordmod.hovertext.deflect_sword": "§5§oHold right click to enter a defensive stance, destroying all projectiles nearby. Release without SHIFT to dash forward",
   "rajswordmod.hovertext.sentinel_sword": "§c§oHold right click to enter a defensive stance, becoming invincible and unmovable for a short time ",
   "rajswordmod.hovertext.knockback_sword": "§9§oHold right click to charge up attack. When released, launches enemies in front of you away. Increased by knockback ",
-  "rajswordmod.hovertext.holy_sword": "§e§oOn hit againt undead, has a small chance to cause a holy explosion that damages the undead. Kills always cause an explosion ",
+  "rajswordmod.hovertext.holy_sword": "§e§oOn hit against undead, has a small chance to cause a holy explosion that damages the undead. Kills always cause an explosion ",
   "rajswordmod.hovertext.gaia_sword": "§a§oFull swings fire a wave that pierces mobs. Damage increased by Sharpness",
-  "rajswordmod.hovertext.blood_sword": "§4§oHits store health in the blade. Hold rightclick to absorb the stolen health",
-  "rajswordmod.hovertext.shadow_clone_sword": "§8§oRight click to summon a clone of youself that takes Enemy Aggro and grants you invisibility"
+  "rajswordmod.hovertext.blood_sword": "§4§oHits store health in the blade. Hold right click to absorb the stolen health",
+  "rajswordmod.hovertext.shadow_clone_sword": "§8§oRight click to summon a clone of yourself that takes Enemy Aggro and grants you invisibility"
 
 
 }
