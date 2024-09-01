@@ -35,7 +35,7 @@ public class GaiaProjectileRenderer extends EntityRenderer<GaiaProjectileEntity>
         pPoseStack.mulPose(Axis.YP.rotationDegrees(270.0F));
 
         // Scale and translate as needed
-        pPoseStack.scale(2.0f, 2.0f, 2.0f);
+        pPoseStack.scale(1.0f, 1.0f, 1.0f);
         pPoseStack.translate(0.0, -1.4, 0.0);
 
         // Render the model

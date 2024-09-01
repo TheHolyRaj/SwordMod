@@ -19,7 +19,7 @@ public class ModEntities {
     public static final RegistryObject<EntityType<DashProjectileEntity>> DASH_PROJECTILE =
             ENTITY_TYPES.register("dash_projectile",
                     () -> EntityType.Builder.<DashProjectileEntity>of(DashProjectileEntity::new, MobCategory.MISC)
-                            .sized(2f, 1f)
+                            .sized(1f, 1f)
                             .clientTrackingRange(4)
                             .updateInterval(20)
                             .build("dash_projectile"));
@@ -27,7 +27,7 @@ public class ModEntities {
     public static final RegistryObject<EntityType<GaiaProjectileEntity>> GAIA_PROJECTILE =
             ENTITY_TYPES.register("gaia_projectile",
                     () -> EntityType.Builder.<GaiaProjectileEntity>of(GaiaProjectileEntity::new, MobCategory.MISC)
-                            .sized(2f, 0.3f)
+                            .sized(1f, 0.3f)
                             .clientTrackingRange(4)
                             .updateInterval(20)
                             .build("gaia_projectile"));

@@ -8,11 +8,11 @@
   "item.rajswordmod.anti_armor_sword": "Armor Piercer",
   "item.rajswordmod.shadow_clone_sword": "§8Dark Deceiver",
 
-  "effect.rajswordmod.anti_armor_effect": "Anti-Armor. Reduces armor and armor toughness",
+  "effect.rajswordmod.anti_armor_effect": "Armor Pierced",
 
   "creativetab.sword_tab": "The Eight Renowned Blades",
 
-  "rajswordmod.hovertext.anti_armor_sword": "§oHold right click to Charge forward with ramping speed. When the attack ends, hits enemies and applies a stacking armor debuff",
+  "rajswordmod.hovertext.anti_armor_sword": "§oHold right click to charge forward with ramping speed. When the attack ends, hits enemies and applies a stacking armor debuff",
   "rajswordmod.hovertext.deflect_sword": "§5§oHold right click to enter a defensive stance, destroying all projectiles nearby. Release without SHIFT to dash forward",
   "rajswordmod.hovertext.sentinel_sword": "§c§oHold right click to enter a defensive stance, becoming invincible and unmovable for a short time ",
   "rajswordmod.hovertext.knockback_sword": "§9§oHold right click to charge up attack. When released, launches enemies in front of you away. Increased by knockback ",
