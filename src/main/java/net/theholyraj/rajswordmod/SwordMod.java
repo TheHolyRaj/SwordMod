@@ -23,10 +23,7 @@ import net.theholyraj.rajswordmod.client.entity.DashProjectileRenderer;
 import net.theholyraj.rajswordmod.client.entity.GaiaProjectileRenderer;
 import net.theholyraj.rajswordmod.client.item.ModItemProperties;
 import net.theholyraj.rajswordmod.client.particle.ModParticles;
-import net.theholyraj.rajswordmod.client.particle.custom.AntiArmorParticle;
-import net.theholyraj.rajswordmod.client.particle.custom.DeflectParticle;
-import net.theholyraj.rajswordmod.client.particle.custom.HolyExplosionParticle;
-import net.theholyraj.rajswordmod.client.particle.custom.HolyFireParticle;
+import net.theholyraj.rajswordmod.client.particle.custom.*;
 import net.theholyraj.rajswordmod.client.sound.ModSounds;
 import net.theholyraj.rajswordmod.network.ModMessages;
 import net.theholyraj.rajswordmod.world.config.ModCommonConfigs;
@@ -99,6 +96,8 @@ public class SwordMod {
                     HolyFireParticle.Provider::new);
             Minecraft.getInstance().particleEngine.register(ModParticles.ANTI_ARMOR_PARTICLES.get(),
                     AntiArmorParticle.Provider::new);
+            Minecraft.getInstance().particleEngine.register(ModParticles.GAIA_BLADE_PARTICLES.get(),
+                    GaiaBladeParticle.Provider::new);
 
         }
     }

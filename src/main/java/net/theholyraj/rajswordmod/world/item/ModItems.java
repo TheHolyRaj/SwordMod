@@ -23,7 +23,7 @@ public class ModItems {
     public static final RegistryObject<HolySwordItem> HOLY_SWORD = ITEMS.register("holy_sword",
             () -> new HolySwordItem(ModTiers.FABLED, 8-5,1.6f-4, new Item.Properties().fireResistant()));
     public static final RegistryObject<GaiaBladeItem> GAIA_SWORD = ITEMS.register("gaia_sword",
-            () -> new GaiaBladeItem(ModTiers.FABLED, 10-5,0.8f-4, new Item.Properties().fireResistant()));
+            () -> new GaiaBladeItem(ModTiers.FABLED, 10-5,1.2f-4, new Item.Properties().fireResistant()));
     public static final RegistryObject<BloodGorgerSwordItem> BLOOD_SWORD = ITEMS.register("blood_sword",
             () -> new BloodGorgerSwordItem(ModTiers.FABLED, 8-5,1.6f-4, new Item.Properties().fireResistant()));
     public static final RegistryObject<AntiArmorSwordItem> ANTI_ARMOR_SWORD = ITEMS.register("anti_armor_sword",

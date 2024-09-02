@@ -26,6 +26,9 @@ public class ModParticles {
     public static final RegistryObject<SimpleParticleType> ANTI_ARMOR_PARTICLES =
             PARTICLE_TYPES.register("anti_armor_particles", () -> new SimpleParticleType(true));
 
+    public static final RegistryObject<SimpleParticleType> GAIA_BLADE_PARTICLES =
+            PARTICLE_TYPES.register("gaia_blade_particles", () -> new SimpleParticleType(true));
+
     public static void register(IEventBus eventBus) {
         PARTICLE_TYPES.register(eventBus);
     }

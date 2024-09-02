@@ -7,7 +7,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
+@OnlyIn(Dist.CLIENT)
 public class AntiArmorParticle extends TextureSheetParticle {
     static final RandomSource RANDOM = RandomSource.create();
     private final SpriteSet sprites;

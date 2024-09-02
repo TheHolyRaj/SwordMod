@@ -32,6 +32,7 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.*;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.network.NetworkHooks;
+import net.theholyraj.rajswordmod.client.particle.ModParticles;
 import net.theholyraj.rajswordmod.world.config.ModCommonConfigs;
 import net.theholyraj.rajswordmod.world.entity.ModEntities;
 import net.theholyraj.rajswordmod.world.item.custom.GaiaBladeItem;
@@ -86,7 +87,7 @@ public class GaiaProjectileEntity extends Projectile {
                 double offsetY = (this.random.nextDouble() - 0.5) * this.getBbHeight();
                 double offsetZ = (this.random.nextDouble() - 0.5) * this.getBbWidth();
 
-                this.level().addParticle(ParticleTypes.HAPPY_VILLAGER,
+                this.level().addParticle(ModParticles.GAIA_BLADE_PARTICLES.get(),
                         this.getX() + offsetX,
                         this.getY() + offsetY,
                         this.getZ() + offsetZ,
@@ -172,7 +173,7 @@ public class GaiaProjectileEntity extends Projectile {
                 double d0 = (this.random.nextDouble()) * this.getBbWidth();
                 double d1 = (this.random.nextDouble()) * this.getBbHeight();
                 double d2 = (this.random.nextDouble()) * this.getBbWidth();
-                serverLevel.sendParticles(ParticleTypes.HAPPY_VILLAGER, this.getX(), this.getY()+(this.random.nextDouble()), this.getZ(), 1, d0, d1, d2, 1.0D);
+                serverLevel.sendParticles(ModParticles.GAIA_BLADE_PARTICLES.get(), this.getX(), this.getY()+(this.random.nextDouble()), this.getZ(), 1, d0, d1, d2, 1.0D);
             }
         }
     }
