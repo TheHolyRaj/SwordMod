@@ -26,6 +26,7 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -36,6 +37,10 @@ import net.theholyraj.rajswordmod.network.packet.DeflectParticleS2CPacket;
 import net.theholyraj.rajswordmod.world.config.ModCommonConfigs;
 import net.theholyraj.rajswordmod.world.entity.custom.DashProjectileEntity;
 import net.theholyraj.rajswordmod.world.item.ModItems;
+import net.theholyraj.rajswordmod.world.item.util.ModCapabilities;
+import net.theholyraj.rajswordmod.world.item.util.bloodsword.IBloodSwordData;
+import net.theholyraj.rajswordmod.world.item.util.upgradesword.IUpgradeSwordData;
+import net.theholyraj.rajswordmod.world.item.util.upgradesword.UpgradeCapabilityProvider;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Comparator;
@@ -82,6 +87,46 @@ public class DeflectSwordItem extends SwordItem {
     }
 
     @Override
+    public @Nullable ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
+        return new UpgradeCapabilityProvider();
+    }
+
+    @Override
+    public CompoundTag getShareTag(ItemStack stack) {
+        CompoundTag nbt = super.getShareTag(stack);
+        if (nbt == null) {
+            nbt = new CompoundTag();
+        }
+        final CompoundTag finalNbt = nbt;
+        stack.getCapability(ModCapabilities.UPGRADE_DATA_CAPABILITY).ifPresent(cap -> {
+            CompoundTag capTag = new CompoundTag();
+            cap.writeToNBT(capTag);
+            finalNbt.put("upgrade_data", capTag);
+        });
+        return nbt;
+    }
+
+    @Override
+    public void readShareTag(ItemStack stack, @javax.annotation.Nullable CompoundTag nbt) {
+        super.readShareTag(stack, nbt);
+        if (nbt != null && nbt.contains("upgrade_data")) {
+            stack.getCapability(ModCapabilities.UPGRADE_DATA_CAPABILITY).ifPresent(cap -> {
+                cap.readFromNBT(nbt.getCompound("upgrade_data"));
+            });
+        }
+    }
+
+    public static void setUpgradeData(ItemStack stack, int data) {
+        stack.getCapability(ModCapabilities.UPGRADE_DATA_CAPABILITY).ifPresent(customData -> {
+            customData.setData(data);
+        });
+    }
+
+    public static int getUpgradeData(ItemStack stack) {
+        return stack.getCapability(ModCapabilities.UPGRADE_DATA_CAPABILITY).map(IUpgradeSwordData::getData).orElse(0);
+    }
+
+    @Override
     public int getUseDuration(ItemStack pStack) {
         return 72000;
     }
@@ -103,9 +148,14 @@ public class DeflectSwordItem extends SwordItem {
                     ModMessages.sendToClients(new DeflectParticleS2CPacket(projectile.position().x(),projectile.position().y(),projectile.position().z()));
                     projectile.remove(Entity.RemovalReason.DISCARDED);
                     stack.setDamageValue(1);
+                    if (getUpgradeData(stack) < ModCommonConfigs.ARROW_RENDER_UPGRADE_AMOUNT.get()){
+                        int currentAmount = getUpgradeData(stack);
+                        setUpgradeData(stack, currentAmount+1);
+                    }
                 }
             }
         }
+        player.sendSystemMessage(Component.literal("" + getUpgradeData(stack)));
     }
 
     @Override

@@ -8,6 +8,11 @@ public class ModCommonConfigs {
 
     public static final ForgeConfigSpec.ConfigValue<Integer> ARROW_RENDER_COOLDOWN;
 
+    public static final ForgeConfigSpec.ConfigValue<Integer> ARROW_RENDER_UPGRADE_AMOUNT;
+    public static final ForgeConfigSpec.ConfigValue<Integer> ARROW_RENDER_UPGRADE_COOLDOWN;
+
+
+
     public static final ForgeConfigSpec.ConfigValue<Integer> SENTINEL_SWORD_CHARGE_TIME;
     public static final ForgeConfigSpec.ConfigValue<Integer> SENTINEL_SWORD_COOLDOWN;
 
@@ -49,7 +54,10 @@ public class ModCommonConfigs {
     static {
         BUILDER.push("Configs for Sword Mod");
 
-        ARROW_RENDER_COOLDOWN = BUILDER.comment("How long (in ticks) ArrowRender should go on cooldown").define("ArrowRender Cooldown", 100);
+        ARROW_RENDER_COOLDOWN = BUILDER.comment("How long (in ticks) ArrowRender should go on cooldown").define("ArrowRender Cooldown", 200);
+
+        ARROW_RENDER_UPGRADE_AMOUNT = BUILDER.comment("How many Projectiles need to be deleted for upgrade").define("ArrowRender Upgrade Amount",100);
+        ARROW_RENDER_UPGRADE_COOLDOWN = BUILDER.comment("How long (in ticks) ArrowRenderUpgraded should go on cooldown").define("ArrowRenderUpgraded Cooldown",150);
 
         SENTINEL_SWORD_CHARGE_TIME = BUILDER.comment("How long (in ticks) should SentinelSword be used for")
                 .define("SentinelSword Charge Time", 10);

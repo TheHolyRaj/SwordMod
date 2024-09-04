@@ -22,8 +22,7 @@ import net.theholyraj.rajswordmod.world.item.ModItems;
 import net.theholyraj.rajswordmod.world.item.util.ModCapabilities;
 import net.theholyraj.rajswordmod.world.item.util.bloodsword.BloodCapabilityProvider;
 import net.theholyraj.rajswordmod.world.item.util.bloodsword.IBloodSwordData;
-import net.theholyraj.rajswordmod.world.item.util.holysword.HolyCapabilityProvider;
-import net.theholyraj.rajswordmod.world.item.util.holysword.IHolySwordData;
+
 
 import javax.annotation.Nullable;
 import java.util.List;

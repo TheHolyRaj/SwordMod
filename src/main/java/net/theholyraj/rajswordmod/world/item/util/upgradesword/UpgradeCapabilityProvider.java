@@ -1,4 +1,4 @@
-package net.theholyraj.rajswordmod.world.item.util.bloodsword;
+package net.theholyraj.rajswordmod.world.item.util.upgradesword;
 
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -7,28 +7,19 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.theholyraj.rajswordmod.world.item.util.ModCapabilities;
-import net.theholyraj.rajswordmod.world.item.util.upgradesword.IUpgradeSwordData;
-import net.theholyraj.rajswordmod.world.item.util.upgradesword.UpgradeSwordData;
-import org.jetbrains.annotations.NotNull;
+import net.theholyraj.rajswordmod.world.item.util.holysword.HolySwordData;
+import net.theholyraj.rajswordmod.world.item.util.holysword.IHolySwordData;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 
-public class BloodCapabilityProvider implements ICapabilityProvider, INBTSerializable<CompoundTag> {
-    private final IBloodSwordData instance = new BloodSwordData();
-    private final IUpgradeSwordData instance2 = new UpgradeSwordData();
-
+public class UpgradeCapabilityProvider  implements ICapabilityProvider, INBTSerializable<CompoundTag> {
+    private final IUpgradeSwordData instance = new UpgradeSwordData();
 
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-        if (cap == ModCapabilities.BLOOD_DATA_CAPABILITY) {
-            return LazyOptional.of(() -> instance).cast();
-        } else if (cap == ModCapabilities.UPGRADE_DATA_CAPABILITY) {
-            return LazyOptional.of(() -> instance2).cast();
-        } else {
-            return LazyOptional.empty();
-        }
+        return cap == ModCapabilities.UPGRADE_DATA_CAPABILITY ? LazyOptional.of(() -> instance).cast() : LazyOptional.empty();
     }
     @Override
     public CompoundTag serializeNBT() {
