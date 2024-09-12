@@ -31,6 +31,7 @@ import net.theholyraj.rajswordmod.world.entity.ModEntities;
 import net.theholyraj.rajswordmod.world.item.util.ModCapabilities;
 import net.theholyraj.rajswordmod.world.item.util.ModCreativeModeTabs;
 import net.theholyraj.rajswordmod.world.item.ModItems;
+import net.theholyraj.rajswordmod.world.keybinding.ModKeyBindings;
 import net.theholyraj.rajswordmod.world.mobeffects.ModMobEffects;
 import org.slf4j.Logger;
 
@@ -83,6 +84,7 @@ public class SwordMod {
             EntityRenderers.register(ModEntities.DASH_PROJECTILE.get(), DashProjectileRenderer::new);
             EntityRenderers.register(ModEntities.GAIA_PROJECTILE.get(), GaiaProjectileRenderer::new);
             EntityRenderers.register(ModEntities.CLONE_ENTITY.get(), CloneEntityRenderer::new);
+            ModKeyBindings.onKeyRegister();
 
             ModItemProperties.makeProperties();
         }

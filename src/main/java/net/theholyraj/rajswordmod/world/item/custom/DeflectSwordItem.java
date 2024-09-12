@@ -18,6 +18,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
@@ -26,6 +27,7 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraftforge.client.extensions.IForgeBakedModel;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -62,7 +64,12 @@ public class DeflectSwordItem extends SwordItem {
     @Override
     public void onUseTick(Level pLevel, LivingEntity pLivingEntity, ItemStack pStack, int pRemainingUseDuration) {
         if (pLivingEntity instanceof Player player){
-            deleteNearbyProjectiles(player, pStack);
+            if (isUpgraded(pStack)){
+                upgradedDeleteNearbyProjectiles(player, pStack);
+            }
+            else {
+                deleteNearbyProjectiles(player, pStack);
+            }
         }
         super.onUseTick(pLevel, pLivingEntity, pStack, pRemainingUseDuration);
     }
@@ -126,6 +133,15 @@ public class DeflectSwordItem extends SwordItem {
         return stack.getCapability(ModCapabilities.UPGRADE_DATA_CAPABILITY).map(IUpgradeSwordData::getData).orElse(0);
     }
 
+    public static boolean isUpgraded(ItemStack stack){
+        return stack.getCapability(ModCapabilities.UPGRADE_DATA_CAPABILITY).map(IUpgradeSwordData::isUpgraded).orElse(false);
+    }
+    public static void setUpgraded(ItemStack stack, boolean data) {
+        stack.getCapability(ModCapabilities.UPGRADE_DATA_CAPABILITY).ifPresent(customData -> {
+            customData.setUpgraded(data);
+        });
+    }
+
     @Override
     public int getUseDuration(ItemStack pStack) {
         return 72000;
@@ -134,6 +150,66 @@ public class DeflectSwordItem extends SwordItem {
     @Override
     public UseAnim getUseAnimation(ItemStack pStack) {
         return UseAnim.BLOCK;
+    }
+
+    private void upgradedDeleteNearbyProjectiles(Player player, ItemStack stack) {
+        Vec3 center = new Vec3(player.blockPosition().getX(), player.blockPosition().getY(), player.blockPosition().getZ());
+        List<Projectile> projectiles = player.level().getEntitiesOfClass(Projectile.class, new AABB(center, center).inflate(6), e -> true)
+                .stream()
+                .sorted(Comparator.comparingDouble(ent -> ent.distanceToSqr(center)))
+                .toList();
+
+        for (Projectile projectile : projectiles) {
+            if (projectile.distanceToSqr(player) < 7) {
+                if (!player.level().isClientSide()) {
+                    // Ensure projectile is not discarded before playing sound
+                    Vec3 velocity = projectile.getDeltaMovement();
+                    double velocityThreshold = 0.01; // Smaller threshold for nearly stationary projectiles
+
+                    // Check if the projectile is nearly stationary
+                    if (Math.abs(velocity.x) < velocityThreshold && Math.abs(velocity.y) < velocityThreshold && Math.abs(velocity.z) < velocityThreshold) {
+                        // Check additional conditions if needed, like position or state
+                        if (projectile.onGround() || projectile.blockPosition().equals(projectile.position())) {
+                            player.level().playSound(null, projectile.blockPosition(), ModSounds.PROJECTILE_SLASH.get(), SoundSource.PLAYERS, 0.1f, 1f);
+                            ModMessages.sendToClients(new DeflectParticleS2CPacket(projectile.position().x(), projectile.position().y(), projectile.position().z()));
+                            projectile.discard(); // Discard the projectile if nearly stationary
+                            continue; // Skip to the next projectile
+                        }
+                    }
+
+                    // Additional check to discard projectile based on velocity
+                    if (projectile.getDeltaMovement().lengthSqr() < 0.9) {
+                        player.level().playSound(null, projectile.blockPosition(), ModSounds.PROJECTILE_SLASH.get(), SoundSource.PLAYERS, 0.1f, 1f);
+                        ModMessages.sendToClients(new DeflectParticleS2CPacket(projectile.position().x(), projectile.position().y(), projectile.position().z()));
+                        projectile.discard();
+                        continue; // Skip to the next projectile
+                    }
+
+                    // Handle projectile deflection
+                    Entity shooter = projectile.getOwner();
+                    if (shooter != null) {
+                        Vec3 shooterPosition = new Vec3(shooter.position().x,
+                                shooter.position().y + (shooter.getBbHeight() / 2),
+                                shooter.position().z);
+                        Vec3 directionToShooter = shooterPosition.subtract(projectile.position()).normalize();
+                        projectile.shoot(directionToShooter.x, directionToShooter.y, directionToShooter.z, (float) projectile.getDeltaMovement().length(), 0);
+                        projectile.setOwner(player);
+                        projectile.hasImpulse = true;
+                        player.level().playSound(null, projectile.blockPosition(), ModSounds.PROJECTILE_SLASH.get(), SoundSource.PLAYERS, 0.1f, 1f);
+                        ModMessages.sendToClients(new DeflectParticleS2CPacket(projectile.position().x(), projectile.position().y(), projectile.position().z()));
+                    } else {
+                        Vec3 directionToShooter = new Vec3(-projectile.getDeltaMovement().x,
+                                -projectile.getDeltaMovement().y,
+                                -projectile.getDeltaMovement().z);
+                        projectile.shoot(directionToShooter.x, directionToShooter.y, directionToShooter.z, (float) projectile.getDeltaMovement().length(), 0);
+                        projectile.setOwner(player);
+                        projectile.hasImpulse = true;
+                        player.level().playSound(null, projectile.blockPosition(), ModSounds.PROJECTILE_SLASH.get(), SoundSource.PLAYERS, 0.1f, 1f);
+                        ModMessages.sendToClients(new DeflectParticleS2CPacket(projectile.position().x(), projectile.position().y(), projectile.position().z()));
+                    }
+                }
+            }
+        }
     }
 
     private void deleteNearbyProjectiles(Player player, ItemStack stack){
@@ -155,7 +231,6 @@ public class DeflectSwordItem extends SwordItem {
                 }
             }
         }
-        player.sendSystemMessage(Component.literal("" + getUpgradeData(stack)));
     }
 
     @Override

@@ -7,6 +7,10 @@ public interface IUpgradeSwordData {
 
     int getData();
 
+    void setUpgraded(boolean data);
+
+    boolean isUpgraded();
+
     void readFromNBT(CompoundTag nbt);
 
     void writeToNBT(CompoundTag nbt);

@@ -19,7 +19,8 @@
   "rajswordmod.hovertext.holy_sword": "§e§oOn hit against undead, has a small chance to cause a holy explosion that damages the undead. Kills always cause an explosion ",
   "rajswordmod.hovertext.gaia_sword": "§a§oFull swings fire a wave that pierces mobs. Damage increased by Sharpness",
   "rajswordmod.hovertext.blood_sword": "§4§oHits store health in the blade. Hold right click to absorb the stolen health",
-  "rajswordmod.hovertext.shadow_clone_sword": "§8§oRight click to summon a clone of yourself that takes Enemy Aggro and grants you invisibility"
+  "rajswordmod.hovertext.shadow_clone_sword": "§8§oRight click to summon a clone of yourself that takes Enemy Aggro and grants you invisibility",
 
-
+  "key.categories.rajswordmod": "The Eight Renowned Blades",
+  "key.swordmod.upgradesword": "Ascend Sword"
 }
