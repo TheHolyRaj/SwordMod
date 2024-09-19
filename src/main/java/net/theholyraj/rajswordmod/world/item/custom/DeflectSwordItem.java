@@ -6,6 +6,7 @@ import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -43,6 +44,7 @@ import net.theholyraj.rajswordmod.world.item.util.ModCapabilities;
 import net.theholyraj.rajswordmod.world.item.util.bloodsword.IBloodSwordData;
 import net.theholyraj.rajswordmod.world.item.util.upgradesword.IUpgradeSwordData;
 import net.theholyraj.rajswordmod.world.item.util.upgradesword.UpgradeCapabilityProvider;
+import net.theholyraj.rajswordmod.world.item.util.upgradesword.UpgradeSwordTimer;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Comparator;
@@ -61,6 +63,8 @@ public class DeflectSwordItem extends SwordItem {
         return super.use(pLevel, pPlayer, pUsedHand);
     }
 
+
+
     @Override
     public void onUseTick(Level pLevel, LivingEntity pLivingEntity, ItemStack pStack, int pRemainingUseDuration) {
         if (pLivingEntity instanceof Player player){
@@ -71,13 +75,27 @@ public class DeflectSwordItem extends SwordItem {
                 deleteNearbyProjectiles(player, pStack);
             }
         }
+        if (pRemainingUseDuration == 20){
+            pLevel.playSound((Player)pLivingEntity,pLivingEntity,SoundEvents.SHULKER_BOX_CLOSE, SoundSource.PLAYERS, 1f,2f);
+        }
+        if (pRemainingUseDuration == 17){
+            pLevel.playSound((Player)pLivingEntity,pLivingEntity,SoundEvents.SHULKER_BOX_CLOSE, SoundSource.PLAYERS, 1f,2f);
+        }
         super.onUseTick(pLevel, pLivingEntity, pStack, pRemainingUseDuration);
     }
 
     @Override
     public void onStopUsing(ItemStack stack, LivingEntity entity, int count) {
         if (entity instanceof Player player){
-            player.getCooldowns().addCooldown(this, ModCommonConfigs.ARROW_RENDER_COOLDOWN.get());
+            if (DeflectSwordItem.isUpgraded(stack)){
+                player.getCooldowns().addCooldown(this, ModCommonConfigs.ARROW_RENDER_UPGRADE_COOLDOWN.get());
+            }
+            else {
+                player.getCooldowns().addCooldown(this, ModCommonConfigs.ARROW_RENDER_COOLDOWN.get());
+            }
+            if (!entity.level().isClientSide()){
+                stack.setDamageValue(ModCommonConfigs.ARROW_RENDER_DURABILITY_USE.get());
+            }
             if (!player.isShiftKeyDown()){
                 player.level().playSound(player,player.blockPosition(), SoundEvents.PLAYER_ATTACK_SWEEP,SoundSource.PLAYERS,1,1);
             }
@@ -91,6 +109,27 @@ public class DeflectSwordItem extends SwordItem {
             }
         }
         super.onStopUsing(stack, entity, count);
+    }
+
+    @Override
+    public void inventoryTick(ItemStack pStack, Level pLevel, Entity pEntity, int pSlotId, boolean pIsSelected) {
+        if (pEntity instanceof Player player) {
+            pStack.getCapability(ModCapabilities.UPGRADE_DATA_CAPABILITY).ifPresent(capability -> {
+                if (capability.isUpgraded()) {
+                    if (!pLevel.isClientSide()) {
+                        UpgradeSwordTimer.tick(pStack, (ServerPlayer) player);
+                    }
+                }
+            });
+        }
+
+        // Maintain standard inventory tick behavior
+        super.inventoryTick(pStack, pLevel, pEntity, pSlotId, pIsSelected);
+    }
+
+    @Override
+    public boolean isDamageable(ItemStack stack) {
+        return !DeflectSwordItem.isUpgraded(stack);
     }
 
     @Override
@@ -138,13 +177,17 @@ public class DeflectSwordItem extends SwordItem {
     }
     public static void setUpgraded(ItemStack stack, boolean data) {
         stack.getCapability(ModCapabilities.UPGRADE_DATA_CAPABILITY).ifPresent(customData -> {
+            UpgradeSwordTimer.setUpgradeTimer(stack,ModCommonConfigs.ARROW_RENDER_UPGRADE_TIME.get());
             customData.setUpgraded(data);
+        });
+        stack.getCapability(ModCapabilities.UPGRADE_DATA_CAPABILITY).ifPresent(customData -> {
+            customData.setData(ModCommonConfigs.ARROW_RENDER_UPGRADE_TIME.get());
         });
     }
 
     @Override
     public int getUseDuration(ItemStack pStack) {
-        return 72000;
+        return ModCommonConfigs.ARROW_RENDER_ABILITY_USE_TIME.get();
     }
 
     @Override
@@ -223,7 +266,6 @@ public class DeflectSwordItem extends SwordItem {
                 if (!player.level().isClientSide()){
                     ModMessages.sendToClients(new DeflectParticleS2CPacket(projectile.position().x(),projectile.position().y(),projectile.position().z()));
                     projectile.remove(Entity.RemovalReason.DISCARDED);
-                    stack.setDamageValue(1);
                     if (getUpgradeData(stack) < ModCommonConfigs.ARROW_RENDER_UPGRADE_AMOUNT.get()){
                         int currentAmount = getUpgradeData(stack);
                         setUpgradeData(stack, currentAmount+1);
@@ -236,6 +278,32 @@ public class DeflectSwordItem extends SwordItem {
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
         pTooltipComponents.add(Component.translatable("rajswordmod.hovertext.deflect_sword"));
+    }
+
+    @Override
+    public boolean isBarVisible(ItemStack pStack) {
+        if (DeflectSwordItem.isUpgraded(pStack)){
+            return true;
+        }
+        return super.isBarVisible(pStack);
+    }
+
+    @Override
+    public int getBarWidth(ItemStack stack) {
+        if (DeflectSwordItem.isUpgraded(stack)){
+            int remainingTime = UpgradeSwordTimer.getUpgradeTimer(stack);
+            int maxTime = ModCommonConfigs.ARROW_RENDER_UPGRADE_TIME.get();
+            return Math.round(13.0F * (float) remainingTime / (float) maxTime);
+        }
+        return super.getBarWidth(stack);
+    }
+
+    @Override
+    public int getBarColor(ItemStack stack) {
+        if (DeflectSwordItem.isUpgraded(stack)){
+            return 0xFF00FF;
+        }
+        return super.getBarColor(stack);
     }
     //////////////////////////////////////////EVENT//////////////////////////////////////////////////////
     @SubscribeEvent

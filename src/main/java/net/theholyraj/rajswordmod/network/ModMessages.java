@@ -7,10 +7,7 @@ import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
 import net.theholyraj.rajswordmod.SwordMod;
-import net.theholyraj.rajswordmod.network.packet.DeflectParticleS2CPacket;
-import net.theholyraj.rajswordmod.network.packet.HolyFireParticleS2CPacket;
-import net.theholyraj.rajswordmod.network.packet.UpgradeSwordC2SPacket;
-import net.theholyraj.rajswordmod.network.packet.UpgradeSwordSERVERS2CPacket;
+import net.theholyraj.rajswordmod.network.packet.*;
 
 public class ModMessages {
     public static SimpleChannel INSTANCE;
@@ -44,6 +41,12 @@ public class ModMessages {
                 .decoder(UpgradeSwordSERVERS2CPacket::new)
                 .encoder(UpgradeSwordSERVERS2CPacket::toBytes)
                 .consumerMainThread(UpgradeSwordSERVERS2CPacket::handle)
+                .add();
+
+        net.messageBuilder(SyncSwordTimerS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(SyncSwordTimerS2CPacket::new)
+                .encoder(SyncSwordTimerS2CPacket::toBytes)
+                .consumerMainThread(SyncSwordTimerS2CPacket::handle)
                 .add();
 
         net.messageBuilder(UpgradeSwordC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)

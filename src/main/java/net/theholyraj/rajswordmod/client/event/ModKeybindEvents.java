@@ -26,7 +26,6 @@ public class ModKeybindEvents {
             if (player != null) {
                 ModMessages.sendToServer(new UpgradeSwordC2SPacket());
             }
-            player.sendSystemMessage(Component.literal("fsdfs"));
         }
     }
 }
