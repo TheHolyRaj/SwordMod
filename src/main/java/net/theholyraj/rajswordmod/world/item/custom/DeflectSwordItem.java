@@ -49,12 +49,25 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.UUID;
 
 @Mod.EventBusSubscriber(modid = SwordMod.MODID)
 public class DeflectSwordItem extends SwordItem {
     public DeflectSwordItem(Tier pTier, int pAttackDamageModifier, float pAttackSpeedModifier, Properties pProperties) {
         super(pTier, pAttackDamageModifier, pAttackSpeedModifier, pProperties);
     }
+    public static final String SWORD_UUID_TAG = "SwordUUID";
+
+    public static String getSwordUUID(ItemStack stack) {
+        CompoundTag nbt = stack.getOrCreateTag();
+        if (!nbt.contains(SWORD_UUID_TAG)) {
+            String uniqueID = UUID.randomUUID().toString();
+            nbt.putString(SWORD_UUID_TAG, uniqueID);
+            stack.setTag(nbt);
+        }
+        return nbt.getString(SWORD_UUID_TAG);
+    }
+
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
         if (pUsedHand == InteractionHand.MAIN_HAND){
@@ -62,8 +75,6 @@ public class DeflectSwordItem extends SwordItem {
         }
         return super.use(pLevel, pPlayer, pUsedHand);
     }
-
-
 
     @Override
     public void onUseTick(Level pLevel, LivingEntity pLivingEntity, ItemStack pStack, int pRemainingUseDuration) {
@@ -113,17 +124,13 @@ public class DeflectSwordItem extends SwordItem {
 
     @Override
     public void inventoryTick(ItemStack pStack, Level pLevel, Entity pEntity, int pSlotId, boolean pIsSelected) {
-        if (pEntity instanceof Player player) {
-            pStack.getCapability(ModCapabilities.UPGRADE_DATA_CAPABILITY).ifPresent(capability -> {
-                if (capability.isUpgraded()) {
-                    if (!pLevel.isClientSide()) {
-                        UpgradeSwordTimer.tick(pStack, (ServerPlayer) player);
-                    }
-                }
-            });
-        }
-
-        // Maintain standard inventory tick behavior
+        if (!pLevel.isClientSide && pEntity instanceof ServerPlayer serverPlayer)
+        {pStack.getCapability(ModCapabilities.UPGRADE_DATA_CAPABILITY).ifPresent(cap -> {
+            // Force synchronization to prevent creative mode issues
+            if (cap.isUpgraded()) {
+                UpgradeSwordTimer.tick(pStack, serverPlayer);
+            }
+        });}
         super.inventoryTick(pStack, pLevel, pEntity, pSlotId, pIsSelected);
     }
 
@@ -140,6 +147,7 @@ public class DeflectSwordItem extends SwordItem {
     @Override
     public CompoundTag getShareTag(ItemStack stack) {
         CompoundTag nbt = super.getShareTag(stack);
+        System.out.println("SADdsa");
         if (nbt == null) {
             nbt = new CompoundTag();
         }
@@ -148,6 +156,10 @@ public class DeflectSwordItem extends SwordItem {
             CompoundTag capTag = new CompoundTag();
             cap.writeToNBT(capTag);
             finalNbt.put("upgrade_data", capTag);
+            finalNbt.putBoolean("isUpgraded", cap.isUpgraded());
+            if (isUpgraded(stack)){
+                finalNbt.putInt("timer", UpgradeSwordTimer.getUpgradeTimer(stack));
+            }
         });
         return nbt;
     }
@@ -155,9 +167,18 @@ public class DeflectSwordItem extends SwordItem {
     @Override
     public void readShareTag(ItemStack stack, @javax.annotation.Nullable CompoundTag nbt) {
         super.readShareTag(stack, nbt);
+        System.out.println("SADdsa");
         if (nbt != null && nbt.contains("upgrade_data")) {
             stack.getCapability(ModCapabilities.UPGRADE_DATA_CAPABILITY).ifPresent(cap -> {
                 cap.readFromNBT(nbt.getCompound("upgrade_data"));
+
+                // Load the isUpgraded boolean
+                if (nbt.contains("isUpgraded")) {
+                    cap.setUpgraded(nbt.getBoolean("isUpgraded"));
+                }
+                if (isUpgraded(stack) && nbt.contains("timer")){
+                    UpgradeSwordTimer.setUpgradeTimer(stack, nbt.getInt("timer"));
+                }
             });
         }
     }
@@ -177,11 +198,10 @@ public class DeflectSwordItem extends SwordItem {
     }
     public static void setUpgraded(ItemStack stack, boolean data) {
         stack.getCapability(ModCapabilities.UPGRADE_DATA_CAPABILITY).ifPresent(customData -> {
-            UpgradeSwordTimer.setUpgradeTimer(stack,ModCommonConfigs.ARROW_RENDER_UPGRADE_TIME.get());
-            customData.setUpgraded(data);
-        });
-        stack.getCapability(ModCapabilities.UPGRADE_DATA_CAPABILITY).ifPresent(customData -> {
-            customData.setData(ModCommonConfigs.ARROW_RENDER_UPGRADE_TIME.get());
+            if (customData.isUpgraded() != data) {
+                UpgradeSwordTimer.setUpgradeTimer(stack, ModCommonConfigs.ARROW_RENDER_UPGRADE_TIME.get());
+                customData.setUpgraded(data);
+            }
         });
     }
 
@@ -277,7 +297,21 @@ public class DeflectSwordItem extends SwordItem {
 
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-        pTooltipComponents.add(Component.translatable("rajswordmod.hovertext.deflect_sword"));
+        if (DeflectSwordItem.isUpgraded(pStack)){
+            pTooltipComponents.add(Component.translatable("rajswordmod.hovertext.deflect_sword_awakened"));
+        }
+        else {
+            pTooltipComponents.add(Component.translatable("rajswordmod.hovertext.deflect_sword_unawakened"));
+        }
+        int deletedProjectiles = DeflectSwordItem.getUpgradeData(pStack);
+
+        int requiredProjectiles = ModCommonConfigs.ARROW_RENDER_UPGRADE_AMOUNT.get();
+        if (requiredProjectiles > deletedProjectiles){
+            pTooltipComponents.add(Component.translatable("rajswordmod.tooltip.projectiles_count_no", deletedProjectiles, requiredProjectiles));
+        }
+        else {
+            pTooltipComponents.add(Component.translatable("rajswordmod.tooltip.projectiles_count_yes"));
+        }
     }
 
     @Override

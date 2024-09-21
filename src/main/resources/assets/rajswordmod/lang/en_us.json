@@ -13,7 +13,12 @@
   "creativetab.sword_tab": "The Eight Renowned Blades",
 
   "rajswordmod.hovertext.anti_armor_sword": "§oHold right click to charge forward with ramping speed. When the attack ends, hits enemies and applies a stacking armor debuff",
-  "rajswordmod.hovertext.deflect_sword": "§lRend§r\nHold right-click to enter a defensive stance, deflecting all nearby projectiles.\n\n§lRush§r\nAutomatically dash forward after use. Hold Shift to cancel the dash.",
+
+  "rajswordmod.hovertext.deflect_sword_awakened": "TODO.\n §lDeflect§r\nHold right-click to enter a defensive stance, deflecting all nearby projectiles back.\n\n§lRush§r\nAutomatically dash forward after use. Hold Shift to cancel the dash.",
+  "rajswordmod.hovertext.deflect_sword_unawakened": "One of the two fabled Guarding blades, renowned for centuries as the scourge of marksmen and archers alike.\n§lRend§r\nHold right-click to enter a defensive stance, slicing all nearby projectiles.\n\n§lRush§r\nAutomatically dash forward after use. Hold Shift to cancel the dash.",
+  "rajswordmod.tooltip.projectiles_count_no": "\n§lNOT READY TO AWAKEN§r\n Deleted Projectiles: %d/%d",
+  "rajswordmod.tooltip.projectiles_count_yes": "\n§lREADY TO AWAKEN§r\n",
+
 
   "rajswordmod.hovertext.sentinel_sword": "§c§oHold right click to enter a defensive stance, becoming invincible and unmovable for a short time ",
   "rajswordmod.hovertext.knockback_sword": "§9§oHold right click to charge up attack. When released, launches enemies in front of you away. Increased by knockback ",

@@ -13,25 +13,36 @@ import java.util.Map;
 
 public class UpgradeSwordTimer {
 
-    private static final Map<ItemStack, Integer> upgradeTimers = new HashMap<>();
+    private static final Map<String, Integer> upgradeTimers = new HashMap<>();
 
     public static void setUpgradeTimer(ItemStack stack, int time) {
-        upgradeTimers.put(stack, time);
+        String swordUUID = DeflectSwordItem.getSwordUUID(stack);
+        upgradeTimers.put(swordUUID, time);
     }
+
     public static int getUpgradeTimer(ItemStack stack) {
-        return upgradeTimers.getOrDefault(stack, 0);
+        String swordUUID = DeflectSwordItem.getSwordUUID(stack);
+        return upgradeTimers.getOrDefault(swordUUID, 0);
     }
+
     public static void tick(ItemStack stack, ServerPlayer player) {
+        String swordUUID = DeflectSwordItem.getSwordUUID(stack);
         int time = getUpgradeTimer(stack);
+
         if (time > 0) {
-            upgradeTimers.put(stack, time - 1);
+            upgradeTimers.put(swordUUID, time - 1);
         } else {
-            upgradeTimers.remove(stack);
-            if (stack.is(ModItems.DEFLECT_SWORD.get())){
-                DeflectSwordItem.setUpgraded(stack,false);
-                DeflectSwordItem.setUpgradeData(stack,0);
+            upgradeTimers.remove(swordUUID);
+
+            if (stack.is(ModItems.DEFLECT_SWORD.get())) {
+                DeflectSwordItem.setUpgraded(stack, false);
+                DeflectSwordItem.setUpgradeData(stack, 0);
             }
         }
-        ModMessages.sendToPlayer(new SyncSwordTimerS2CPacket(getUpgradeTimer(stack),player.getInventory().selected), player);
+
+        int slotIndex = player.getInventory().findSlotMatchingItem(stack);
+        if (slotIndex != -1) {
+            ModMessages.sendToPlayer(new SyncSwordTimerS2CPacket(getUpgradeTimer(stack), slotIndex), player);
+        }
     }
 }

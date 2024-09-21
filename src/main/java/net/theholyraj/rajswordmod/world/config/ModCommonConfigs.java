@@ -61,7 +61,7 @@ public class ModCommonConfigs {
         ARROW_RENDER_DURABILITY_USE = BUILDER.comment("How much durability should ArrowRender use when finished").define("ArrowRender Durability Cost",20);
         ARROW_RENDER_ABILITY_USE_TIME = BUILDER.comment("How long should the player be allowed to use ArrowRenders Ability (in ticks)").define("ArrowRender Use Time",200);
 
-        ARROW_RENDER_UPGRADE_AMOUNT = BUILDER.comment("How many Projectiles need to be deleted for upgrade").define("ArrowRender Upgrade Amount",50);
+        ARROW_RENDER_UPGRADE_AMOUNT = BUILDER.comment("How many Projectiles need to be deleted for upgrade").define("ArrowRender Upgrade Amount",5);
         ARROW_RENDER_UPGRADE_COOLDOWN = BUILDER.comment("How long (in ticks) ArrowRenderUpgraded should go on cooldown").define("ArrowRenderUpgraded Cooldown",150);
         ARROW_RENDER_UPGRADE_TIME = BUILDER.comment("How Long can ArrowRender be upgraded (in ticks)").define("ArrowRender Upgrade Time",3600);
 
