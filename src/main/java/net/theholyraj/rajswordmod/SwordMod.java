@@ -5,6 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
@@ -31,7 +32,7 @@ import net.theholyraj.rajswordmod.world.entity.ModEntities;
 import net.theholyraj.rajswordmod.world.item.util.ModCapabilities;
 import net.theholyraj.rajswordmod.world.item.util.ModCreativeModeTabs;
 import net.theholyraj.rajswordmod.world.item.ModItems;
-import net.theholyraj.rajswordmod.world.keybinding.ModKeyBindings;
+import net.theholyraj.rajswordmod.client.keybinding.ModKeyBindings;
 import net.theholyraj.rajswordmod.world.mobeffects.ModMobEffects;
 import org.slf4j.Logger;
 
@@ -84,8 +85,6 @@ public class SwordMod {
             EntityRenderers.register(ModEntities.DASH_PROJECTILE.get(), DashProjectileRenderer::new);
             EntityRenderers.register(ModEntities.GAIA_PROJECTILE.get(), GaiaProjectileRenderer::new);
             EntityRenderers.register(ModEntities.CLONE_ENTITY.get(), CloneEntityRenderer::new);
-            ModKeyBindings.onKeyRegister();
-
             ModItemProperties.makeProperties();
         }
         @SubscribeEvent
@@ -100,6 +99,10 @@ public class SwordMod {
                     AntiArmorParticle.Provider::new);
             Minecraft.getInstance().particleEngine.register(ModParticles.GAIA_BLADE_PARTICLES.get(),
                     GaiaBladeParticle.Provider::new);
+        }
+        @SubscribeEvent
+        public static void registerKeybinds(RegisterKeyMappingsEvent event){
+            event.register(ModKeyBindings.INSTANCE.awakenSwordKey);
 
         }
     }
